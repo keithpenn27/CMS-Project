@@ -39,7 +39,7 @@ $(document)
           // window.location = data.redirect;
         } else if (data.error !== undefined) {
             _error
-                .text(data.error)
+                .html(data.error)
                 .show();
         }
     })
@@ -91,10 +91,10 @@ $(document)
         // Whatever the dataObj is
         console.log(data);
         if (data.redirect !== undefined) {
-          // window.location = data.redirect;
+          window.location = data.redirect;
         } else if (data.error !== undefined) {
             _error
-                .text(data.error)
+                .html(data.error)
                 .show();
         }
     })
