@@ -6,24 +6,11 @@
     require_once "inc/config.php";
 
     ForceDashboard();
-    
+
+    require_once "inc/header.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE-edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="follow">
 
-        <title>Login | CMS Project</title>
-
-        <base href="cms-project" />
-        <link rel="stylesheet" href="css/bootstrap.css" crossorigin="anonymous">
-    </head>
-
-    <body>
     <div class="container">
         <div class="row">
         <form class="js-login" autocomplete="on">
