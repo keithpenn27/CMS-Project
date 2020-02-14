@@ -42,6 +42,7 @@
 
     } else {
         // Die. Kill the scripe. Redirect the user.
+        header("Location: ../index.php");
         exit('Invalid URL');
     }
 ?>

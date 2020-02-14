@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="follow">
 
-        <title>Page Title</title>
+        <title>CMS Project</title>
 
         <base href="cms-project" />
         <link rel="stylesheet" href="css/bootstrap.css" crossorigin="anonymous">
