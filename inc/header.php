@@ -3,9 +3,6 @@
         exit('You do not have a config file.');
     }
 
-    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != null) {
-      $user = new User($_SESSION['user_id']);
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
