@@ -30,14 +30,13 @@
 
             if (password_verify($password, $hash)) {
                 // User is signed in
-
+                $_SESSION['user_id'] = $user_id;
+                $response['redirect'] = "dashboard.php";
             } else {
                 // Invalid user email/password combo
                 $response['error'] = "Invalid user email/password combo.";
             }
 
-            $response['error'] = "An account has already been registered with that email address. Please log in.";
-            $response['is_logged_in'] = false;
         } else {
             // They need to create an account.
             $response['error'] = "You do not have an account. <a href='register.php'>Create one now?</a>";

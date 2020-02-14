@@ -35,13 +35,13 @@ $(document)
     .done(function ajaxDone(data) {
         // Whatever the dataObj is
         console.log(data);
-        if (data.redirect !== undefined) {
-          window.location = data.redirect;
-        } else if (data.error !== undefined) {
+        if (data.error !== undefined) {
             _error
                 .html(data.error)
                 .show();
-        }
+        } else if (data.redirect !== undefined) {
+          window.location = data.redirect;
+        } 
     })
     .fail(function ajaxFailed(e){
         // Ajax call failed
@@ -90,13 +90,13 @@ $(document)
     .done(function ajaxDone(data) {
         // Whatever the dataObj is
         console.log(data);
-        if (data.redirect !== undefined) {
-          window.location = data.redirect;
-        } else if (data.error !== undefined) {
+        if (data.error !== undefined) {
             _error
                 .html(data.error)
                 .show();
-        }
+        } else if (data.redirect !== undefined) {
+          window.location = data.redirect;
+        } 
     })
     .fail(function ajaxFailed(e){
         // Ajax call failed
