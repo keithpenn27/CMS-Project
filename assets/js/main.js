@@ -36,7 +36,7 @@ $(document)
         // Whatever the dataObj is
         console.log(data);
         if (data.redirect !== undefined) {
-          // window.location = data.redirect;
+          window.location = data.redirect;
         } else if (data.error !== undefined) {
             _error
                 .html(data.error)
@@ -63,8 +63,8 @@ $(document)
 	var dataObj = {
 		email: $("input[type='email']", _form).val(),
         password: $("input[type='password']", _form).val(),
-	};
-
+    };
+    
 	if(dataObj.email.length < 6) {
 		_error
 			.text("Please enter a valid email address")

@@ -3,7 +3,9 @@
     // Allow the config
     define('__CONFIG__', true);
     // Require the config file
-    require_once "inc/config.php" 
+    require_once "inc/config.php";
+
+    ForceDashboard();
     
 ?>
 

@@ -22,7 +22,7 @@
         if ($findUser->rowCount() == 1) {
             // User exists
             $response['error'] = "An account has already been registered with that email address.<br/>Please log in.";
-            $response['is_logged_in'] = false;
+
         } else {
             // User does not exist, add them now.
 
