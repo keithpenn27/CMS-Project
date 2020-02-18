@@ -12,7 +12,13 @@
     require_once "inc/header.php";
 ?>
     <div class="container">
-      <p>Hello <?php echo $user->email; ?>, you registered at <?php echo $user->reg_time; ?></p>
+      <?php if (isset($_GET['message']) && $_GET['message'] != null): ?>
+      <div class="alert alert-dismissible alert-success">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p><?php echo $_GET['message'] ?></p>
+      <?php endif; ?>
+
+    </div>
     </div>
 
     <?php require_once "inc/footer.php"; ?>

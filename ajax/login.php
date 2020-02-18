@@ -28,12 +28,20 @@
                 $response['redirect'] = "dashboard.php";
             } else {
                 // Invalid user email/password combo
-                $response['error'] = "Invalid user email/password combo.";
+                $response['error'] = "<div class='alert alert-dismissible alert-warning'>
+                <button type='button' class='close' data-dismiss='alert';>&times;</button>
+                <h4 class='alert-heading'>Warning!</h4>
+                <p class='mb-0'>Invalid user email/password combo.</p>
+              </div>";
             }
 
         } else {
             // They need to create an account.
-            $response['error'] = "You do not have an account. <a href='register.php'>Create one now?</a>";
+            $response['error'] = "<div class='alert alert-dismissible alert-warning'>
+            <button type='button' class='close' data-dismiss='alert';>&times;</button>
+            <h4 class='alert-heading'>Warning!</h4>
+            <p class='mb-0'>You do not have an account. <a href='register.php'>Create one now?</a></p>
+          </div>";
            
         }
 

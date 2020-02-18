@@ -19,7 +19,7 @@
 	include_once "classes/Page.php";
 	include_once "functions.php";
 	
-
+    // Set up our db connection
     $con = DB::getConnection();
     
     ?>

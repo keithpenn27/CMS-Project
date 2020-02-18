@@ -18,14 +18,21 @@
 
         if ($user_found) {
             // User exists
-            $response['error'] = "An account has already been registered with that email address.<br/>Please <a href='login.php'>log in</a>.";
+            $response['error'] = "<div class='alert alert-dismissible alert-warning'>
+            <button type='button' class='close' data-dismiss='alert'>&times;</button>
+            <h4 class='alert-heading'>Warning!</h4>
+            <p class='mb-0'>An account has already been registered with that email address.<br/>Please <a href='login.php'>log in</a>.</p>
+          </div>";
 
         } else {
             // User does not exist, add them now.
-
+            $first_name = $_POST['firstName'];
+            $last_name = $_POST['lastName'];
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-            $addUser = $con->prepare("INSERT INTO users(email, password) VALUES(LOWER(:email), :password)");
+            $addUser = $con->prepare("INSERT INTO users(first_name, last_name, email, password) VALUES(:firstname, :lastname, LOWER(:email), :password)");
+            $addUser->bindParam(':firstname', $first_name, PDO::PARAM_STR);
+            $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
             $addUser->bindParam(':email', $email, PDO::PARAM_STR);
             $addUser->bindParam(':password', $password, PDO::PARAM_STR);
             $addUser->execute();
@@ -34,15 +41,14 @@
 
             $_SESSION['user_id'] = (int) $user_id;
 
-            $response['redirect'] = 'dashboard.php?message=welcome';
-            $response['is_logged_in'] = true;
+            $user_first_name = (string) $_POST['firstName'];
+
+            $msg_string = sprintf("dashboard.php?message=Hello, %s. Welcome to CMS Project!", $user_first_name);
+            $response['redirect'] = $msg_string;
+
         }
 
-        // Make sure the user CAN be added AND is added
-
         // Return the proper information back to JavaScript to redirect us.
-
-        $response['redirect'] = 'dashboard.php';
 
         echo json_encode($response, JSON_PRETTY_PRINT);
         exit;
