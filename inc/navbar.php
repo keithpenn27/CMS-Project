@@ -1,13 +1,14 @@
 <?php
-      if(!defined('__CONFIG__')) {
-        exit('You do not have a config file.');
-    }
+    if(!defined('__CONFIG__')) {
+      header('Location: ../index.php');
+      exit;
 
+  }
     $user = (isset($_SESSION['user_id']) && $_SESSION['user_id'] != null) ? new User($_SESSION['user_id']) : false;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="index.php">CMS Project</a>
+  <a class="navbar-brand" href=<?php echo Url::getBasePath() . 'index.php' ?>>CMS Project</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -15,7 +16,7 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/cms-project/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href=<?php echo Url::getBasePath() . 'index.php'; ?>>Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Features</a>
@@ -42,8 +43,8 @@
       <?php echo $user->email ?>
       </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="dashboard.php">My Profile</a>
-          <a class="dropdown-item" href="logout.php">Logout</a>
+          <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'dashboard.php'; ?>>My Profile</a>
+          <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'logout.php'; ?>>Logout</a>
           <a class="dropdown-item" href="#">Another action</a>
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
@@ -51,8 +52,8 @@
     </ul>
 
     <?php else: ?>
-      <a class="nav-link" href="register.php">Sign Up</a>
-      <a class="nav-link" href="login.php">Login</a>
+      <a class="nav-link" href=<?php echo Url::getBasePath() . 'register.php'; ?>>Sign Up</a>
+      <a class="nav-link" href=<?php echo Url::getBasePath() . 'login.php'; ?>>Login</a>
     <?php endif; ?>
   </div>
 </nav>

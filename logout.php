@@ -5,5 +5,9 @@
     setcookie(session_name() . '' . 0 . '/');
     session_regenerate_id(true);
 
-    header("Location: index.php");
+    $_GET['message'] = str_replace(' ', '%20', "You have been logged out. Come back soon!");
+
+    $query = $query = http_build_query($_GET);
+
+    header("Location: index.php" . "?" . $query);
 ?>

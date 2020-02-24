@@ -1,7 +1,9 @@
 <?php
-      if(!defined('__CONFIG__')) {
-        exit('You do not have a config file.');
-    }
+    if(!defined('__CONFIG__')) {
+      header('Location: ../index.php');
+      exit;
+
+  }
 ?>
     <!-- Loading some required libraries for Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -13,4 +15,4 @@
   crossorigin="anonymous"></script>
     
     <!-- Loading main js scripts -->
-    <script src="assets/js/main.js" ></script>
+    <script src=<?php echo Url::getBasePath() . '/assets/js/main.js'; ?>></script>

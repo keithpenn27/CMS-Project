@@ -25,6 +25,8 @@
           </div>";
 
         } else {
+
+            $con = DB::getConnection();
             // User does not exist, add them now.
             $first_name = $_POST['firstName'];
             $last_name = $_POST['lastName'];
@@ -55,7 +57,7 @@
 
     } else {
         // Die. Kill the scripe. Redirect the user.
-        header("Location: ../index.php");
+        header("Location: " . Url::getBasePath() . "index.php");
         exit('Invalid URL');
     }
 ?>

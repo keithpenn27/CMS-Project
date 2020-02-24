@@ -1,7 +1,11 @@
 <?php
       if(!defined('__CONFIG__')) {
-        exit('You do not have a config file.');
+        header('Location: ../index.php');
+        exit;
+
     }
+
+    require_once "classes/Url.php";
 
 ?>
 <!DOCTYPE html>
@@ -15,8 +19,9 @@
         <title>CMS Project</title>
 
         <base href="cms-project" />
-        <link rel="stylesheet" href="css/bootstrap.css" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/style.css" crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "/css/bootstrap.css"; ?> crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "/css/style.css"; ?> crossorigin="anonymous">
+
     </head>
     <body>
 

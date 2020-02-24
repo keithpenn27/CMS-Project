@@ -19,7 +19,7 @@
 
         if ($user_found) {
             // User exists, try to sign them in
-            $user_id = (int) $user_found['user_id'];
+            $user_id = (int) $user_found['uid'];
             $hash = $user_found['password'];
 
             if (password_verify($password, $hash)) {
@@ -50,7 +50,7 @@
 
     } else {
         // Die. Kill the scripe. Redirect the user.
-        header("Location: ../index.php");
+        header("Location: " . Url::getBasePath() . "index.php");
         exit('Invalid URL');
     }
 ?>

@@ -1,25 +1,34 @@
 <?php
-
-    // If there is no constant defined called __CONFIG__ do not load this file
+ // If there is no constant defined called __CONFIG__ do not load this file
     if(!defined('__CONFIG__')) {
-        exit('You do not have a config file.');
+        header('Location: ../index.php');
+        exit;
+
     }
 
-    // Sessions are always turned on
-    if (!isset($_SESSION)) {
+     // Sessions are always turned on
+     if (!isset($_SESSION)) {
         session_start();
-    }
-
+}
     // Our config is below
 
 	// Include the class files
 	include_once "classes/DB.php";
-	include_once "classes/Filter.php";
-	include_once "classes/User.php";
-	include_once "classes/Page.php";
-	include_once "functions.php";
-	
+    include_once "classes/Filter.php";
+    include_once "classes/User.php";
+    include_once "classes/Page.php";
+    include_once "classes/Url.php";
+    include_once "functions.php";
+
     // Set up our db connection
-    $con = DB::getConnection();
+    $host = "localhost";
+    $port = "3306";
+    $dbName = "cms_project";
+    $dbUserName = "kp-anamoly-27";
+    $dbPass = "JorLog1720";
+
+    $con = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
+    $tableCon = DB::getConnection();
+
     
     ?>

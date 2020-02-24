@@ -13,7 +13,12 @@
             <?php
                 echo "Hello World! Today is: ";
                 echo date('Y m d');
+                if (isset($_GET['message']) && $_GET['message'] != null):
             ?>
+            <div class="jumbotron">
+                  <h3><?php echo str_replace('%20', ' ', $_GET['message']); ?>      
+            </div>
+                <?php endif; ?>
         </div>
 
     <?php require_once "inc/footer.php"; ?>

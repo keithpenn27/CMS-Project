@@ -2,7 +2,9 @@
 
  // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
-    exit('You do not have a config file.');
+    header('Location: ../index.php');
+    exit;
+
 }
 
 class User {
@@ -20,7 +22,7 @@ class User {
 
         $user_id = Filter::Int($user_id);
 
-        $user = $this->con->prepare("SELECT user_id, first_name, last_name, email, reg_time FROM users WHERE user_id = :user_id LIMIT 1");
+        $user = $this->con->prepare("SELECT uid, first_name, last_name, email, reg_time FROM users WHERE uid = :user_id LIMIT 1");
         $user->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $user->execute();
 
@@ -28,7 +30,7 @@ class User {
             $user = $user->fetch(PDO::FETCH_OBJ);
 
             $this->email        = (string) $user->email;
-            $this->user_id      = (int) $user->user_id;
+            $this->user_id      = (int) $user->uid;
             $this->reg_time     = (string) $user->reg_time;
             $this->first_name   = (string) $user->first_name;
             $this->last_name    = (string) $user->last_name;
@@ -52,7 +54,7 @@ class User {
         $email = (string) Filter::String($email);
         
     
-        $findUser = $con->prepare("SELECT user_id, password, first_name, last_name FROM users WHERE email = LOWER(:email) LIMIT 1");
+        $findUser = $con->prepare("SELECT uid, password, first_name, last_name FROM users WHERE email = LOWER(:email) LIMIT 1");
         $findUser->bindParam(':email', $email, PDO::PARAM_STR);
         $findUser->execute();
     
