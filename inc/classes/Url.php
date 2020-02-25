@@ -11,7 +11,7 @@ class Url {
 
     public static function getBasePath() {
         // Constant for the base url
-        return "/cms-project/";
+        return (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . "/cms-project/";
     }
 }
 

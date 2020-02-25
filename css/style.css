@@ -10,3 +10,8 @@
 .nav-right {
     margin-left: 10px;
 }
+
+input.file-upload {
+    padding: 0;
+    border: none;
+}

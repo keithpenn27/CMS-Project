@@ -62,6 +62,33 @@ class DB {
             echo "Your database is already set up." . $e->getMessage();
             return;
         }
+
+        $fileTable = 'CREATE TABLE files (
+            fid INT (5) UNSIGNED AUTO_INCREMENT COMMENT "The id of the uploaded file" NOT NULL,
+            filename VARCHAR (200) COMMENT "The file name from the meta" NOT NULL,
+            owner INT (5) UNSIGNED COMMENT "The person that uploaded the file" NOT NULL,
+            artist VARCHAR (200) COMMENT "The artist that recorded the song",
+            album VARCHAR (200) COMMENT "The album that a song belongs to",
+            song_title VARCHAR (200) COMMENT "The title of the track",
+            upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the file was uploaded" NOT NULL,
+            last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the file was last updated" NOT NULL,
+            mime_type VARCHAR (100) COMMENT "The mime type of the file" NOT NULL,
+            PRIMARY KEY (fid),
+            INDEX (filename),
+            INDEX (owner),
+            CONSTRAINT files FOREIGN KEY (owner)
+            REFERENCES users(uid)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+        )
+        ENGINE INNODB;';
+
+        try {
+            $ex = $pdo->prepare($fileTable);
+            $ex->execute();
+        } catch (PDOException $e) {
+            echo "Your database is already set up." . $e-getMessage();
+        }
     
     }
 }

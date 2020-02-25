@@ -75,33 +75,109 @@ $(document)
     sendAjax('POST', 'ajax/login.php', dataObj, 'json',true, _error);
 })
 
-function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error) {
-    $.ajax({
-        type: requestType,
-        url: requestUrl,
-        data: dataobject,
-        dataType: dType,
-        async: asyncBool,
-    })
-    .done(function ajaxDone(data) {
-        // Whatever the dataObj is
-        console.log(data);
-        if (data.error !== undefined) {
-            _error
-                .html(data.error)
-                .show();
-        } else if (data.redirect !== undefined) {
-          window.location = data.redirect;
-        } 
-    })
-    .fail(function ajaxFailed(e){
-        // Ajax call failed
-        console.log(e);
-    })
-    .always(function ajaxAlwaysDoThis(data){
-        // Always do
-        console.log('Always');
-    })
+.on("submit", "form.js-song", function (event) {
+	event.preventDefault();
 
-	return false;
+	var _form = $(this);
+    var _error = $(".js-error", _form);
+    var _playback = $(".playback", _form);
+
+    var _file = $('#file')[0].files[0];
+    var _songTitle = $("#song-title", _form).val();
+    var _artist = $("#artist", _form).val();
+    var _album = $("#album", _form).val();
+
+    var fd = new FormData();
+    fd.append('file', _file);
+    fd.append('song-title', _songTitle);
+    fd.append('artist', _artist);
+    fd.append('album', _album);
+
+	// Assuming the code gets this far, we can start the ajax process
+	_error.hide();
+
+    sendAjax('POST', 'ajax/song.php', fd, 'json', true, _error, true, _playback)
+        // Reset the form.
+    $(':input','.js-song')
+        .not(':button, :submit, :reset, :hidden')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
+
+})
+
+function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error, formdata = false, _playback = null) {
+    if (formdata) {
+        $.ajax({
+            type: requestType,
+            url: requestUrl,
+            data: dataobject,
+            processData: false,
+            contentType: false,
+            async: asyncBool,
+        })
+        .done(function ajaxDone(data) {
+            // Whatever the dataObj is
+            console.log(data);
+            if (data.error !== undefined) {
+                _error
+                    .html(data.error)
+                    .show();
+            } else if (data.redirect !== undefined) {
+              window.location = data.redirect;
+            }
+    
+            if (data.uploaded !== undefined) {
+                _playback
+                    .html(data.uploaded)
+                    .show();
+            }
+        })
+        .fail(function ajaxFailed(e){
+            // Ajax call failed
+            console.log(e);
+        })
+        .always(function ajaxAlwaysDoThis(data){
+            // Always do
+            console.log('Always');
+        })
+    
+        return false;
+
+    } else {
+
+        $.ajax({
+            type: requestType,
+            url: requestUrl,
+            data: dataobject,
+            dataType: dType,
+            async: asyncBool,
+        })
+        .done(function ajaxDone(data) {
+            // Whatever the dataObj is
+            console.log(data);
+            if (data.error !== undefined) {
+                _error
+                    .html(data.error)
+                    .show();
+            } else if (data.redirect !== undefined) {
+            window.location = data.redirect;
+            }
+
+            if (data.uploaded !== undefined) {
+                _playback
+                    .html(data.uploaded);
+            }
+        })
+        .fail(function ajaxFailed(e){
+            // Ajax call failed
+            console.log(e);
+        })
+        .always(function ajaxAlwaysDoThis(data){
+            // Always do
+            console.log('Always');
+        })
+
+        return false;
+    }
 }

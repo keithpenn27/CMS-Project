@@ -19,8 +19,8 @@
         <title>CMS Project</title>
 
         <base href="cms-project" />
-        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "/css/bootstrap.css"; ?> crossorigin="anonymous">
-        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "/css/style.css"; ?> crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "css/bootstrap.css"; ?> crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "css/style.css"; ?> crossorigin="anonymous">
 
     </head>
     <body>
