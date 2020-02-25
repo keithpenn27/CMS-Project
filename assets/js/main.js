@@ -98,11 +98,14 @@ $(document)
 
     sendAjax('POST', 'ajax/song.php', fd, 'json', true, _error, true, _playback)
         // Reset the form.
-    $(':input','.js-song')
+    $(':input',_form)
         .not(':button, :submit, :reset, :hidden')
         .val('')
         .removeAttr('checked')
         .removeAttr('selected');
+
+        $(':submit', _form)
+            .html('Upload Another');
 
 })
 
