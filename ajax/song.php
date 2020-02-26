@@ -42,7 +42,6 @@
             try {
                 $addFile = $con->prepare("INSERT INTO files(filename, owner, artist, album, song_title, mime_type) VALUES(:filename, :owner, :artist, :album, :song_title, :mime_type)");
                 $addFile->bindParam(':filename', $fileName, PDO::PARAM_STR);
-                $addFile->bindParam(':owner', $owner, PDO::PARAM_STR);
                 $addFile->bindParam(':artist', $artist, PDO::PARAM_STR);
                 $addFile->bindParam(':album', $album, PDO::PARAM_STR);
                 $addFile->bindParam(':song_title', $songTitle, PDO::PARAM_STR);
