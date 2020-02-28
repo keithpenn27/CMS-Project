@@ -19,12 +19,25 @@
             $response['error'] = "There was an error while uploading the file:<br/>";
         } else {
 
-            // Create an array of the form info to pass into songUpload().
+            // Create an array of the form info to pass into songUpload(). Must be associative array with column name as the key (top hierarchy)
+            // and pdoVal as first element key of second level, pdoType as second element key of second level
             $formArr = array(
-                ":song_title" => Filter::String($_POST['song-title']),
-                ":artist" => $_POST['artist'],
-                ":album" => $_POST['album'],
-                ":owner" => $_SESSION['user_id'],
+                ":song_title" => array(
+                    "pdoVal" => Filter::String($_POST['song-title']),
+                    "pdoType" => PDO::PARAM_STR
+                ),
+                ":artist" => array(
+                    "pdoVal" => $_POST['artist'],
+                    "pdoType" => PDO::PARAM_STR
+                ),  
+                ":album" => array(
+                    "pdoVal" => $_POST['album'],
+                    "pdoType" => PDO::PARAM_STR
+                ),
+                ":owner" => array(
+                    "pdoVal" => $_SESSION['user_id'],
+                    "pdoType" => PDO::PARAM_INT
+                )
             );
 
             // Create our new file object to handle the upload and get file info.

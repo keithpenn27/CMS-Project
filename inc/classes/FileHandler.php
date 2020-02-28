@@ -46,7 +46,8 @@ class FileHandler {
 
             // The $val passed into bindParam has to be passed by refernce
             foreach($arr as $key => &$val) {
-                $addFile->bindParam($key, $val);
+
+                $addFile->bindParam($key, $val["pdoVal"], $val['pdoType']);
             }
 
 
