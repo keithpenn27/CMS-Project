@@ -118,6 +118,9 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             processData: false,
             contentType: false,
             async: asyncBool,
+            error: function(xhr, status, error) {
+                alert(xhr.responseText);
+              }
         })
         .done(function ajaxDone(data) {
             // Whatever the dataObj is
@@ -131,12 +134,14 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             }
     
             if (data.uploaded !== undefined) {
+                alert("made it back!");
                 _playback
                     .html(data.uploaded)
                     .show();
             }
         })
         .fail(function ajaxFailed(e){
+            alert('Failed!!!')
             // Ajax call failed
             console.log(e);
         })
