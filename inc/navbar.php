@@ -44,9 +44,10 @@
       </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'dashboard.php'; ?>>My Profile</a>
+          <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'edit-profile.php'; ?>>Edit Profile</a>
+          <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'song.php'; ?>>Upload Song</a>
+          <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'image.php'; ?>>Upload Image</a>
           <a class="dropdown-item" href=<?php echo Url::getBasePath() . 'logout.php'; ?>>Logout</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
     </ul>

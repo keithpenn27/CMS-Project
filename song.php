@@ -34,12 +34,12 @@
             </div>
 
             <div class="js-error" style="display:none;"></div>
-            <div class="playback" style="display:none;"></div>
             
             <button type="submit" class="btn btn-primary">Submit</button>
             </fieldset>
         </form>
         </div>
+        <div class="display" style="display:none;"></div>
     </div>
 
     <?php require_once "inc/footer.php"; ?>

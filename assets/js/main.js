@@ -80,7 +80,7 @@ $(document)
 
 	var _form = $(this);
     var _error = $(".js-error", _form);
-    var _playback = $(".playback", _form);
+    var _display = $(".display");
 
     var _file = $('#file')[0].files[0];
     var _songTitle = $("#song-title", _form).val();
@@ -96,7 +96,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/song.php', fd, 'json', true, _error, true, _playback)
+    sendAjax('POST', 'ajax/song.php', fd, 'json', true, _error, true, _display)
         // Reset the form.
     $(':input',_form)
         .not(':button, :submit, :reset, :hidden')
@@ -109,7 +109,37 @@ $(document)
 
 })
 
-function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error, formdata = false, _playback = null) {
+.on("submit", "form.js-image", function (event) {
+	event.preventDefault();
+
+	var _form = $(this);
+    var _error = $(".js-error", _form);
+    var _display = $(".display");
+
+    var _file = $('#file')[0].files[0];
+    var _imageTitle = $("#image-title", _form).val();
+
+    var fd = new FormData();
+    fd.append('file', _file);
+    fd.append('image-title', _imageTitle);
+
+	// Assuming the code gets this far, we can start the ajax process
+	_error.hide();
+
+    sendAjax('POST', 'ajax/image.php', fd, 'json', true, _error, true, _display)
+        // Reset the form.
+    $(':input',_form)
+        .not(':button, :submit, :reset, :hidden')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
+
+        $(':submit', _form)
+            .html('Upload Another');
+
+})
+
+function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error, formdata = false, _display = null) {
     if (formdata) {
         $.ajax({
             type: requestType,
@@ -134,8 +164,7 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             }
     
             if (data.uploaded !== undefined) {
-                alert("made it back!");
-                _playback
+                _display
                     .html(data.uploaded)
                     .show();
             }

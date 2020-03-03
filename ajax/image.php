@@ -22,16 +22,8 @@
             // Create an array of the form info to pass into songUpload(). Must be associative array with column name as the key (top hierarchy)
             // and pdoVal as first element key of second level, pdoType as second element key of second level
             $formArr = array(
-                ":song_title" => array(
-                    "pdoVal" => Filter::String($_POST['song-title']),
-                    "pdoType" => PDO::PARAM_STR
-                ),
-                ":artist" => array(
-                    "pdoVal" => $_POST['artist'],
-                    "pdoType" => PDO::PARAM_STR
-                ),  
-                ":album" => array(
-                    "pdoVal" => $_POST['album'],
+                ":image_title" => array(
+                    "pdoVal" => Filter::String($_POST['image-title']),
                     "pdoType" => PDO::PARAM_STR
                 ),
                 ":owner" => array(
@@ -44,13 +36,13 @@
             $fileHandler = new FileHandler($_FILES['file']);
 
             // Upload the song
-            $fileHandler->songUpload($formArr);
+            $fileHandler->imageUpload($formArr);
 
             // Get the source for the html audio player
             $src = $fileHandler->getSrc();
 
             // Putting the audio player into the ajax response to dynamically show it.
-            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your song has been uploaded!</div><div class=\"col-12\"><audio controls><source src=\"" . $src . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio></div></div>";
+            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your image has been uploaded!</div><div class=\"col-12\"><img class=\"image-upload\" src=\"" . $src . "\" /></div></div>";
 
             $response['uploaded'] = $msg_string;
         }

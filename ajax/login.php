@@ -25,7 +25,10 @@
             if (password_verify($password, $hash)) {
                 // User is signed in
                 $_SESSION['user_id'] = $user_id;
-                $response['redirect'] = "dashboard.php";
+                $user_first_name = (string) $user_found['first_name'];
+
+                $msg_string = sprintf("dashboard.php?message=Hello, %s. Welcome back to CMS Project!", $user_first_name);
+                $response['redirect'] = $msg_string;
             } else {
                 // Invalid user email/password combo
                 $response['error'] = "<div class='alert alert-dismissible alert-warning'>

@@ -35,6 +35,14 @@ class DB {
         return self::$con;
     }
 
+    /**
+     * Sets up the initial DB connection if one does not exist.
+     * @param string $host The database host i.e. localhost
+     * @param string $port The port that the database host is listening on.
+     * @param string $dbName The name of the database.
+     * @param string $dbUsername The username that has full access to the database.
+     * @param string $dbPass The password for database user account.
+     */
     public static function setConnection($host, $port, $dbName, $dbUsername, $dbPass) {
         
         // If this instance has not been started, start it.
@@ -43,6 +51,10 @@ class DB {
         }
     }
     
+    /**
+     * Creates the necessary tables in the database after connection.
+     * @param DB $pdo The connection PDO object that contains the database connection.
+     */
     public static function createTables($pdo) {
         $userTable = 'CREATE TABLE users(
             uid   INT  (5) UNSIGNED AUTO_INCREMENT COMMENT "User Id" NOT NULL,
@@ -70,6 +82,7 @@ class DB {
             artist VARCHAR (200) COMMENT "The artist that recorded the song",
             album VARCHAR (200) COMMENT "The album that a song belongs to",
             song_title VARCHAR (200) COMMENT "The title of the track",
+            image_title VARCHAR (200) COMMENT "The title of the image",
             upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the file was uploaded" NOT NULL,
             last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the file was last updated" NOT NULL,
             mime_type VARCHAR (100) COMMENT "The mime type of the file" NOT NULL,
@@ -91,5 +104,9 @@ class DB {
         }
     
     }
+
+    // TODO add query builder functions for users, files, and other content. One function to handle all if possible.
+
+    // TODO add update db function when user edits profile
 }
 ?>

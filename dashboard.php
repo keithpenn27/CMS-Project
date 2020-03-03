@@ -13,13 +13,15 @@
 ?>
     <div class="container">
       <?php if (isset($_GET['message']) && $_GET['message'] != null): ?>
-      <div class="alert alert-dismissible alert-success">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p><?php echo $_GET['message'] ?></p>
+        <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p><?php echo $_GET['message'] ?></p>
       <?php endif; ?>
 
+      </div>
     </div>
-    </div>
+
+     <!-- TODO Create Edit Profile Page. Add content to user's dashboard. Perhaps, a news feed. -->
 
     <?php require_once "inc/footer.php"; ?>
 
