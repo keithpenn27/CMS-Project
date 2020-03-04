@@ -11,10 +11,13 @@ class User {
 
     private $con;
 
+    public $profileImage;
     public $first_name;
     public $last_name;
     public $user_id;
     public $email;
+    public $birthDate;
+    public $bio;
     public $reg_time;
     
     public function __construct(int $user_id) {
@@ -22,7 +25,7 @@ class User {
 
         $user_id = Filter::Int($user_id);
 
-        $user = $this->con->prepare("SELECT uid, first_name, last_name, email, reg_time FROM users WHERE uid = :user_id LIMIT 1");
+        $user = $this->con->prepare("SELECT uid, profile_image, first_name, last_name, email, password, birthdate, bio, reg_time FROM users WHERE uid = :user_id LIMIT 1");
         $user->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $user->execute();
 
@@ -34,6 +37,9 @@ class User {
             $this->reg_time     = (string) $user->reg_time;
             $this->first_name   = (string) $user->first_name;
             $this->last_name    = (string) $user->last_name;
+            $this->profileImage    = (string) $user->profile_image;
+            $this->birthDate    = (string) $user->birthdate;
+            $this->bio    = (string) $user->bio;
 
         } else {
             // No user.
@@ -54,7 +60,7 @@ class User {
         $email = (string) Filter::String($email);
         
     
-        $findUser = $con->prepare("SELECT uid, password, first_name, last_name FROM users WHERE email = LOWER(:email) LIMIT 1");
+        $findUser = $con->prepare("SELECT uid, profile_image, first_name, last_name, email, password, birthdate, bio FROM users WHERE email = LOWER(:email) LIMIT 1");
         $findUser->bindParam(':email', $email, PDO::PARAM_STR);
         $findUser->execute();
     

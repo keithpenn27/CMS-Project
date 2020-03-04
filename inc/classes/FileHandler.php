@@ -17,7 +17,7 @@ class FileHandler {
     private $newDir;
     public $mimeType;
     private $fileSize;
-    private $filePath;
+    public $filePath;
 
 
     /**
@@ -159,6 +159,8 @@ class FileHandler {
      return $newname;
 
     }
+
+    // Delete all files from the uploads directory by specific user if user is deleted.
 
 }
 ?>

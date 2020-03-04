@@ -62,6 +62,9 @@ class DB {
             last_name  VARCHAR (100)  COMMENT "The users last name"  NOT NULL,
             email  VARCHAR (250) COLLATE utf8_unicode_ci COMMENT "The users email" NOT NULL ,
             password   VARCHAR (200) COMMENT "The users password" NOT Null,
+            profile_image   VARCHAR (200) COMMENT "The users profile image" NOT Null,
+            birthdate DATE COMMENT "The users birthdate",
+            bio LONGTEXT COMMENT "The users bio \from\ the profile",
             reg_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the user registered" NOT NULL, 
             PRIMARY KEY (uid),
             UNIQUE KEY (email)
@@ -71,7 +74,12 @@ class DB {
             $ex = $pdo->prepare($userTable);
             $ex->execute();
         } catch (PDOException $e) {
-            echo "Your database is already set up." . $e->getMessage();
+            echo "<div class=\"container\">
+            <div class=\"alert alert-dismissible alert-warning\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+                <h3>Your database has already been set up!</h3>
+            </div>
+        </div>" . $e->getMessage();
             return;
         }
 
@@ -100,9 +108,46 @@ class DB {
             $ex = $pdo->prepare($fileTable);
             $ex->execute();
         } catch (PDOException $e) {
-            echo "Your database is already set up." . $e-getMessage();
+            echo "<div class=\"container\">
+            <div class=\"alert alert-dismissible alert-warning\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+                <h3>Your database has already been set up!</h3>
+            </div>
+        </div>" . $e-getMessage();
         }
+
+        echo "<div class=\"container\">
+        <div class=\"alert alert-dismissible alert-success\">
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+            <h3>Your database has been set up!</h3>
+            <a href=\"../register.php\">Create Your Account</a>
+        </div>
+    </div>";
     
+    }
+
+    public static function updateUser($profile_image, $first_name, $last_name, $newEmail, $oldEmail, $password, $birthDate, $bio) {
+
+        if ($profile_image !== null) {
+            $file = new FileHandler($profile_image);
+
+            move_uploaded_file($profile_image['tmp_name'], $file->filePath);
+        }
+
+        $con = DB::getConnection();
+            try {
+            $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image, first_name = :firstname, last_name = :lastname, email = LOWER(:email), password = :password, birthdate = :birthdate, bio = :bio WHERE email = \"$oldEmail\"");
+            $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
+            $addUser->bindParam(':firstname', $first_name, PDO::PARAM_STR);
+            $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
+            $addUser->bindParam(':email', $newEmail, PDO::PARAM_STR);
+            $addUser->bindParam(':password', $password, PDO::PARAM_STR);
+            $addUser->bindParam(':birthdate', $birthDate, PDO::PARAM_STR);
+            $addUser->bindParam(':bio', $bio, PDO::PARAM_STR);
+            $addUser->execute();
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+            }
     }
 
     // TODO add query builder functions for users, files, and other content. One function to handle all if possible.

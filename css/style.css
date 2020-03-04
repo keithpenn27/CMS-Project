@@ -15,3 +15,7 @@ input.file-upload {
     padding: 0;
     border: none;
 }
+
+.image-preview {
+    width: 100px;
+}
