@@ -24,10 +24,13 @@ class User {
         $this->con = DB::getConnection();
 
         $user_id = Filter::Int($user_id);
-
+        try {
         $user = $this->con->prepare("SELECT uid, profile_image, first_name, last_name, email, password, birthdate, bio, reg_time FROM users WHERE uid = :user_id LIMIT 1");
         $user->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $user->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
 
         if ($user->rowCount() == 1) {
             $user = $user->fetch(PDO::FETCH_OBJ);
