@@ -34,7 +34,7 @@
 
             // Create our new file object to handle the upload and get file info.
             $fileHandler = new FileHandler($_FILES['file']);
-
+            
             // Upload the song
             $fileHandler->imageUpload($formArr);
 

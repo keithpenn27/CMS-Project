@@ -32,8 +32,8 @@
 
         
             $configArr = array(
-               "host" => "db-host",
-               "port" => "db-port",
+               "host" => "db-Host",
+               "port" => "db-Port",
                "dbName" => "db-Name",
                "dbUserName" => "db-UserName",
                "dbPass" => "db-Pass"

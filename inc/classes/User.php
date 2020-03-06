@@ -72,5 +72,18 @@ class User {
     
         return $user_found;
     }
+
+    public static function getCurrentUser() {
+        $user = new User($_SESSION['user_id']);
+
+        return array(
+            'email' => $user->email,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'profile_img' => $user->profileImage,
+            'birthdate' => $user->birthDate,
+            'bio' => $user->bio
+        );
+    }
 }
 ?>

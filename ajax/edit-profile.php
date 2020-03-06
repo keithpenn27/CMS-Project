@@ -14,13 +14,26 @@
 
         $email = Filter::String($_POST['email']);
 
-        $user_found = User::Find($email);
+        $user_found = User::Find($email, true);
 
         if ($user_found) {
 
             $con = DB::getConnection();
+            
             // The user exists. Update the user's info
-            $profile_image = $_FILES['profileImage'];
+            if (isset($_FILES['profileImage']) && is_array($_FILES['profileImage'])) {
+                $profile_image = $_FILES['profileImage'];
+                $response['image'] = $profile_image['name'];
+                $response['path'] = Url::getBasePath() . 'uploads/';
+            } elseif ($user_found['profile_image']!= null) {
+                $profile_image = $user_found['profile_image'];
+                $response['image'] = $profile_image;
+                $response['path'] = Url::getBasePath() . 'uploads/';
+            } else {
+                $profile_image = null;
+                $response['image'] = 'inc/img/default-avatar.png';
+                $response['path'] = Url::getBasePath();
+            }
             $first_name = $_POST['firstName'];
             $last_name = $_POST['lastName'];
             $newEmail = $_POST['email'];
@@ -30,7 +43,6 @@
 
             DB::updateUser($profile_image, $first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
 
-            $response['image'] = $profile_image['name'];
             $response['success'] = "<div class=\"alert alert-dismissible alert-success\">Your profile has been saved.</div>";
 
         } else {

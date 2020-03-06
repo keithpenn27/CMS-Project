@@ -38,7 +38,15 @@ class FileHandler {
         // Set up the dirs and paths
         $this->tempDir = $file['tmp_name'];
         $this->newDir = Url::getBasePath() . 'uploads/';
-        $this->filePath = '../uploads/' . $this->fileName;
+
+        $dir = '../uploads/';
+
+        // Check if the upload dir exists
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $this->filePath = $dir . $this->fileName;
     }
 
     /**
@@ -107,6 +115,8 @@ class FileHandler {
             } catch (PDOException $e) {
                 var_dump($e->getMessage());
             }
+        } else {
+            die("The file type is not allowed.");
         }
     }
 

@@ -229,7 +229,7 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             }
 
             if (data.image !== undefined) {
-                $('.image-preview').attr('src', 'uploads/' + data.image);
+                $('.image-preview').attr('src', data.path + data.image);
             }
 
             if (data.success !== undefined) {
@@ -239,7 +239,6 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             }
         })
         .fail(function ajaxFailed(e){
-            alert('Failed!!!')
             // Ajax call failed
             console.log(e);
         })

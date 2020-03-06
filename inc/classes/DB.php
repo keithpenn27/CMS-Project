@@ -128,16 +128,13 @@ class DB {
 
     public static function updateUser($profile_image, $first_name, $last_name, $newEmail, $oldEmail, $password, $birthDate, $bio) {
 
-        if ($profile_image !== null) {
-            $file = new FileHandler($profile_image);
-
-            move_uploaded_file($profile_image['tmp_name'], $file->filePath);
+        if ($profile_image !== null && is_array($profile_image)) {
+            self::updateProfilePic($profile_image, $oldEmail);
         }
 
         $con = DB::getConnection();
             try {
-            $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image, first_name = :firstname, last_name = :lastname, email = LOWER(:email), password = :password, birthdate = :birthdate, bio = :bio WHERE email = \"$oldEmail\"");
-            $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
+            $addUser = $con->prepare("UPDATE users SET first_name = :firstname, last_name = :lastname, email = LOWER(:email), password = :password, birthdate = :birthdate, bio = :bio WHERE email = \"$oldEmail\"");
             $addUser->bindParam(':firstname', $first_name, PDO::PARAM_STR);
             $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
             $addUser->bindParam(':email', $newEmail, PDO::PARAM_STR);
@@ -150,8 +147,21 @@ class DB {
             }
     }
 
-    // TODO add query builder functions for users, files, and other content. One function to handle all if possible.
+    public function updateProfilePic($profile_image, $oldEmail) {
+        $file = new FileHandler($profile_image);
 
-    // TODO add update db function when user edits profile
+        move_uploaded_file($profile_image['tmp_name'], $file->filePath);
+
+        $con = DB::getConnection();
+        try {
+        $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image WHERE email = \"$oldEmail\"");
+        $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
+        $addUser->execute();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+    }
+
+    // TODO add query builder functions for users, files, and other content. One function to handle all if possible.
 }
 ?>

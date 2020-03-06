@@ -7,6 +7,10 @@
 
 /* Custom nav css */
 
+.container {
+    padding: 3% 2%;
+}
+
 .nav-right {
     margin-left: 10px;
 }
@@ -18,4 +22,8 @@ input.file-upload {
 
 .image-preview {
     width: 100px;
+}
+
+img.profile-img {
+    width: 100%;
 }
