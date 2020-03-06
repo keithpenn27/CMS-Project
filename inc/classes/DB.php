@@ -62,7 +62,7 @@ class DB {
             last_name  VARCHAR (100)  COMMENT "The users last name"  NOT NULL,
             email  VARCHAR (250) COLLATE utf8_unicode_ci COMMENT "The users email" NOT NULL ,
             password   VARCHAR (200) COMMENT "The users password" NOT Null,
-            profile_image   VARCHAR (200) COMMENT "The users profile image" NOT Null,
+            profile_image   VARCHAR (200) COMMENT "The users profile image",
             birthdate DATE COMMENT "The users birthdate",
             bio LONGTEXT COMMENT "The users bio \from\ the profile",
             reg_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the user registered" NOT NULL, 
