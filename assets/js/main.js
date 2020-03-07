@@ -35,7 +35,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/register.php', dataObj, 'json', true, _error);
+    sendAjax('POST', '../ajax/register.php', dataObj, 'json', true, _error);
 })
 
 .on("submit", "form.js-login", function (event) {
@@ -72,7 +72,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/login.php', dataObj, 'json',true, _error);
+    sendAjax('POST', '../ajax/login.php', dataObj, 'json',true, _error);
 })
 
 .on("submit", "form.js-song", function (event) {
@@ -96,7 +96,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/song.php', fd, 'json', true, _error, true, _display)
+    sendAjax('POST', '../ajax/song.php', fd, 'json', true, _error, true, _display)
         // Reset the form.
     $(':input',_form)
         .not(':button, :submit, :reset, :hidden')
@@ -107,6 +107,21 @@ $(document)
         $(':submit', _form)
             .html('Upload Another');
 
+})
+
+.on("change", "#profile-image", function(event) {
+    var _profileImage = $('#profile-image')[0].files[0];
+    var _error = $(".js-error");
+    var _display = $(".image-preview");
+
+    var fd = new FormData();
+
+    fd.append('profileImage', _profileImage);
+
+    _error
+        .hide();
+
+    sendAjax('POST', '../ajax/image-prev.php', fd, 'json', true, _error, true, _display);
 })
 
 .on("submit", "form.js-edit-profile", function (event) {
@@ -163,7 +178,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/edit-profile.php', fd, 'json', true, _error, true, _display)
+    sendAjax('POST', '../ajax/edit-profile.php', fd, 'json', true, _error, true, _display);
     
 
 })
@@ -185,7 +200,7 @@ $(document)
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
-    sendAjax('POST', 'ajax/image.php', fd, 'json', true, _error, true, _display)
+    sendAjax('POST', '../ajax/image.php', fd, 'json', true, _error, true, _display)
         // Reset the form.
     $(':input',_form)
         .not(':button, :submit, :reset, :hidden')

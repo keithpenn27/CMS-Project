@@ -1,8 +1,8 @@
 <?php
 
- // If there is no constant defined called __CONFIG__ do not load this file
+// If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
-    header('Location: ../index.php');
+    header('Location: ' . __PATH__);
     exit;
 
 }
@@ -56,15 +56,15 @@ class User {
      * @param bool $return_assoc Optional. If true, returns an associative array.
      * @return                  Returns an associative array of the user that was found if $return_assoc is true. Otherwise, returns a true if the user was found and false if not.
      */
-    public static function Find($email, $return_assoc  = false){
+    public static function Find($uid, $return_assoc  = false){
        
         $con = DB::getConnection();
 
-        $email = (string) Filter::String($email);
+        $user_id = $uid;
         
     
-        $findUser = $con->prepare("SELECT uid, profile_image, first_name, last_name, email, password, birthdate, bio FROM users WHERE email = LOWER(:email) LIMIT 1");
-        $findUser->bindParam(':email', $email, PDO::PARAM_STR);
+        $findUser = $con->prepare("SELECT * FROM users WHERE uid = :uid");
+        $findUser->bindParam(':uid', $user_id, PDO::PARAM_INT);
         $findUser->execute();
     
         if ($return_assoc) {
@@ -80,6 +80,7 @@ class User {
         $user = new User($_SESSION['user_id']);
 
         return array(
+            'uid' => $user->user_id,
             'email' => $user->email,
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
@@ -87,6 +88,29 @@ class User {
             'birthdate' => $user->birthDate,
             'bio' => $user->bio
         );
+    }
+
+    public static function getAge($uid) {
+
+        date_default_timezone_set('America/Chicago');
+
+        $con = DB::getConnection();
+        $q = $con->prepare("SELECT birthdate FROM users WHERE uid = :uid LIMIT 1");
+        $q->bindParam(':uid', $uid, PDO::PARAM_INT);
+        $q->execute();
+
+        $val = $q->fetch();
+
+        $dob = strtotime($val['birthdate']);
+
+        $date = strtotime(date('Y-m-d'));
+
+        // Calculate the age
+        $age = date('Y', $date)-date('Y', $dob);
+
+        // Correct age for leap year
+        return (date('md', date('U', $dob)) > date('md', date('U', $date))) 
+        ? $age-1 : $age;
     }
 }
 ?>

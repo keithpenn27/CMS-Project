@@ -1,6 +1,6 @@
 <?php
     if(!defined('__CONFIG__')) {
-      header('Location: ../index.php');
+      header('Location: ' . __PATH__);
       exit;
 
   }
@@ -15,4 +15,4 @@
   crossorigin="anonymous"></script>
     
     <!-- Loading main js scripts -->
-    <script src=<?php echo Url::getBasePath() . '/assets/js/main.js'; ?>></script>
+    <script src=<?php echo __PATH__ . '/assets/js/main.js'; ?>></script>

@@ -5,13 +5,13 @@
     // Require the config file
     require_once "inc/config.php";
 
-    Page::ForceLogin();
-
     require_once "inc/header.php";
+
+    Page::ForceLogin();
 
     $user = User::getCurrentUser();
 
-    $userPic = ($user['profile_img'] != null) ? Url::getBasePath() . 'uploads/' . $user['profile_img'] : 'inc/img/default-avatar.png';
+    $userPic = ($user['profile_img'] != null) ? __PATH__ . 'uploads/' . $user['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
     
 ?>
 

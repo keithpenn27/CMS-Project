@@ -9,5 +9,9 @@
 
     $query = $query = http_build_query($_GET);
 
-    header("Location: index.php" . "?" . $query);
+    $location =  (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . "/cms-project/" . "?" . $query;
+
+    var_dump($location);
+
+    header("Location: " . $location);
 ?>

@@ -45,7 +45,7 @@
 
             $user_first_name = (string) $_POST['firstName'];
 
-            $msg_string = sprintf("dashboard.php?message=Hello, %s. Welcome to CMS Project!", $user_first_name);
+            $msg_string = sprintf(__PATH__ . "dashboard/?message=Hello, %s. Welcome to CMS Project!", $user_first_name);
             $response['redirect'] = $msg_string;
 
         }
@@ -57,7 +57,7 @@
 
     } else {
         // Die. Kill the scripe. Redirect the user.
-        header("Location: " . Url::getBasePath() . "index.php");
+        header("Location: " . __PATH__);
         exit('Invalid URL');
     }
 ?>

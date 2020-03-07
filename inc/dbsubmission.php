@@ -9,7 +9,7 @@
 
         // If we have a connection to the database, redirect to home page.
         if(DB::getConnection()) {
-            header("Location: " . Url::getBasePath() . "index.php");
+            header("Location: " . __PATH__);
             exit;
         }
 
@@ -18,7 +18,7 @@
         $referrer = explode('/', $referrer);
         $referrer = end($referrer);
     } else {
-        header("Location: " . Url::getBasePath() . "inc/dbsetup.php");
+        header("Location: " . __PATH__ . "inc/dbsetup/");
     }
     
     if ($_SERVER["REQUEST_METHOD"] == 'POST' && $referrer == "dbsetup.php") {

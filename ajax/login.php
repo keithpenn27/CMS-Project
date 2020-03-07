@@ -27,7 +27,7 @@
                 $_SESSION['user_id'] = $user_id;
                 $user_first_name = (string) $user_found['first_name'];
 
-                $msg_string = sprintf("dashboard.php?message=Hello, %s. Welcome back to CMS Project!", $user_first_name);
+                $msg_string = sprintf(__PATH__ . "dashboard/?message=Hello, %s. Welcome back to CMS Project!", $user_first_name);
                 $response['redirect'] = $msg_string;
             } else {
                 // Invalid user email/password combo
@@ -53,7 +53,7 @@
 
     } else {
         // Die. Kill the scripe. Redirect the user.
-        header("Location: " . Url::getBasePath() . "index.php");
+        header("Location: " . __PATH__);
         exit('Invalid URL');
     }
 ?>

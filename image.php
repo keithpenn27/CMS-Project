@@ -5,9 +5,9 @@
     // Require the config file
     require_once "inc/config.php";
 
-    Page::ForceLogin();
-
     require_once "inc/header.php";
+
+    Page::ForceLogin();
 ?>
 
 

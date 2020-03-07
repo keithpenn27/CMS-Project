@@ -1,8 +1,9 @@
 <?php
 
+
  // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
-    header('Location: ../index.php');
+    header('Location: ' . __PATH__);
     exit;
 
 }
@@ -25,7 +26,8 @@ class DB {
 
            // If not on the dbsetup.php page, redirect to it.
             if ($uri != "dbsetup.php" && $uri != "dbsubmission.php") {
-                header("Location: " . Url::getBasePath() . "inc/dbsetup.php");
+            
+               header("Location: " . __PATH__ . "inc/dbsetup.php");
             }
         }
 
@@ -120,7 +122,7 @@ class DB {
         <div class=\"alert alert-dismissible alert-success\">
             <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
             <h3>Your database has been set up!</h3>
-            <a href=\"../register.php\">Create Your Account</a>
+            <a href=\"../register/\">Create Your Account</a>
         </div>
     </div>";
     

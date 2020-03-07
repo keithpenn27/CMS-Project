@@ -14,9 +14,30 @@
         // Get the file and check for errors
         $err = $_FILES['file']['error'];
 
+        $mime = $_FILES['file']['type'];
+
+        $valid_mp3_mimes = array(
+            'audio/mpeg',
+            'audio/x-mpeg',
+            'audio/mp3',
+            'audio/x-mp3',
+            'audio/mpeg3',
+            'audio/x-mpeg3',
+            'audio/x-mpeg-3',
+            'audio/mpg',
+            'audio/x-mpg',
+            'audio/x-mpegaudio',
+            'audio/ogg',
+            'audio/mp4',
+            'audio/vnd.wav'
+        );
+
         if ($err > 0) {
             // If error value is larger than 0, there is an error
             $response['error'] = "There was an error while uploading the file:<br/>";
+        } else if (!in_array($mime, $valid_mp3_mimes)) {
+            $response['uploaded'] = "Please choose a supported file type. (i.e. mp3, mp4, ogg, wav)";
+
         } else {
 
             // Create an array of the form info to pass into songUpload(). Must be associative array with column name as the key (top hierarchy)

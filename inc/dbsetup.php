@@ -8,7 +8,7 @@
 
     // If we have a connection to the database, redirect to home page.
     if(DB::getConnection()) {
-        header("Location: " . Url::getBasePath() . "index.php");
+        header("Location: " . __PATH__ . "index.php");
         exit;
     }
 

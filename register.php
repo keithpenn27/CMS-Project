@@ -5,10 +5,9 @@
     // Require the config file
     require_once "inc/config.php";
 
-
-    Page::ForceDashboard();
-
     require_once "inc/header.php";
+    
+    Page::ForceDashboard();
     
 ?>
 

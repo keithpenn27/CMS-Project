@@ -1,6 +1,7 @@
 <?php
+
 if(!defined('__CONFIG__')) {
-        header('Location: ../index.php');
+        header('Location: ' . __PATH__);
         exit;
 
     }

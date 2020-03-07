@@ -2,7 +2,7 @@
 
  // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
-    header('Location: ../index.php');
+    header('Location: ' . __PATH__);
     exit;
 
 }
@@ -14,14 +14,14 @@ class Page {
             // The user is allowed here
         } else {
             // The user is not allowed here
-            header("Location: login.php"); exit;
+            header("Location: " . __PATH__ . "login/"); exit;
         }
     }
 
     public function ForceDashboard() {
         if (isset($_SESSION['user_id'])) {
             // The user is allowed here, but redirect anyway
-            header("Location: dashboard.php"); exit;
+            header("Location: " . __PATH__ . "dashboard/"); exit;
         } else {
             // The user is not allowed here
         }

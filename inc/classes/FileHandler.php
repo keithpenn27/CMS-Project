@@ -2,12 +2,10 @@
 
  // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
-    header('Location: ../index.php');
+    header('Location: ' . __PATH__);
     exit;
 
 }
-
-include_once ('Url.php');
 
 class FileHandler {
 
@@ -37,7 +35,7 @@ class FileHandler {
 
         // Set up the dirs and paths
         $this->tempDir = $file['tmp_name'];
-        $this->newDir = Url::getBasePath() . 'uploads/';
+        $this->newDir = __PATH__ . 'uploads/';
 
         $dir = '../uploads/';
 

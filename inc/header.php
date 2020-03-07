@@ -1,11 +1,12 @@
 <?php
+
       if(!defined('__CONFIG__')) {
-        header('Location: ../index.php');
+        header('Location: ' . __PATH__);
         exit;
 
     }
 
-    require_once "classes/Url.php";
+    require_once "config.php";
 
 ?>
 <!DOCTYPE html>
@@ -19,8 +20,8 @@
         <title>CMS Project</title>
 
         <base href="cms-project" />
-        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "css/bootstrap.css"; ?> crossorigin="anonymous">
-        <link rel="stylesheet" href=<?php echo Url::getBasePath() . "css/style.css"; ?> crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo __PATH__ . "css/bootstrap.css"; ?> crossorigin="anonymous">
+        <link rel="stylesheet" href=<?php echo __PATH__ . "css/style.css"; ?> crossorigin="anonymous">
 
     </head>
     <body>

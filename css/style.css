@@ -20,6 +20,10 @@ input.file-upload {
     border: none;
 }
 
+.image-upload-preview {
+    width: 200px;
+}
+
 .image-preview {
     width: 100px;
 }
