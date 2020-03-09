@@ -56,16 +56,25 @@ class User {
      * @param bool $return_assoc Optional. If true, returns an associative array.
      * @return                  Returns an associative array of the user that was found if $return_assoc is true. Otherwise, returns a true if the user was found and false if not.
      */
-    public static function Find($uid, $return_assoc  = false){
+    public static function Find($uid = null, $email = null, $return_assoc  = false){
        
         $con = DB::getConnection();
 
         $user_id = $uid;
-        
+        $email = $email;
     
-        $findUser = $con->prepare("SELECT * FROM users WHERE uid = :uid");
-        $findUser->bindParam(':uid', $user_id, PDO::PARAM_INT);
-        $findUser->execute();
+        // If updating the user's email on edit page, we need to be able search by uid.
+        if ($user_id != null) {
+            // search by uid when editing the user
+            $findUser = $con->prepare("SELECT * FROM users WHERE uid = :uid");
+            $findUser->bindParam(':uid', $user_id, PDO::PARAM_INT);
+            $findUser->execute();
+        } else {
+            // search by email when loggin in or registering user.
+            $findUser = $con->prepare("SELECT * FROM users WHERE email = LOWER(:email)");
+            $findUser->bindParam(':email', $email, PDO::PARAM_STR);
+            $findUser->execute();
+        }
     
         if ($return_assoc) {
             return $findUser->fetch(PDO::FETCH_ASSOC);

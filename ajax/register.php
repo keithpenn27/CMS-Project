@@ -14,7 +14,7 @@
 
         $email = Filter::String($_POST['email']);
 
-        $user_found = User::Find($email);
+        $user_found = User::Find("", $email);
 
         if ($user_found) {
             // User exists
@@ -26,7 +26,6 @@
 
         } else {
 
-            $con = DB::getConnection();
             // User does not exist, add them now.
             $first_name = $_POST['firstName'];
             $last_name = $_POST['lastName'];

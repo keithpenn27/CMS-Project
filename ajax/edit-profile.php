@@ -12,13 +12,11 @@
         
         $response = [];
 
-        $user_found = User::Find($_SESSION['user_id'], true);
+        $user_found = User::Find($_SESSION['user_id'], "", true);
 
         $email = $user_found['email'];
 
         if ($user_found) {
-
-            $con = DB::getConnection();
             
             // The user exists. Update the user's info
             if (isset($_FILES['profileImage']) && is_array($_FILES['profileImage'])) {

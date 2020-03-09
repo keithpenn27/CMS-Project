@@ -118,6 +118,35 @@ class DB {
         </div>" . $e-getMessage();
         }
 
+        $postTable = 'CREATE TABLE posts (
+            pid INT (5) UNSIGNED AUTO_INCREMENT COMMENT "The id of the post" NOT NULL,
+            post_title VARCHAR (200) COMMENT "The title of the post" NOT NULL,
+            post_content LONGTEXT COMMENT "The content of the post",
+            author INT (5) UNSIGNED COMMENT "The person that wrote the post" NOT NULL,
+            created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the post was created" NOT NULL,
+            last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "The date and time the post was last edited" NOT NULL,
+            PRIMARY KEY (pid),
+            INDEX (post_title),
+            INDEX (author),
+            CONSTRAINT posts FOREIGN KEY (author)
+            REFERENCES users(uid)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+        )
+        ENGINE INNODB;';
+
+        try {
+            $ex = $pdo->prepare($postTable);
+            $ex->execute();
+        } catch (PDOException $e) {
+            echo "<div class=\"container\">
+            <div class=\"alert alert-dismissible alert-warning\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+                <h3>Your database has already been set up!</h3>
+            </div>
+        </div>" . $e-getMessage();
+        }
+
         echo "<div class=\"container\">
         <div class=\"alert alert-dismissible alert-success\">
             <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
@@ -155,15 +184,38 @@ class DB {
         move_uploaded_file($profile_image['tmp_name'], $file->filePath);
 
         $con = DB::getConnection();
+       
         try {
-        $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image WHERE email = \"$oldEmail\"");
-        $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
-        $addUser->execute();
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    }
+            $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image WHERE email = \"$oldEmail\"");
+            $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
+            $addUser->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
     }
 
+    public static function getBlogRoll() {
+        $query = self::$con->prepare("SELECT * FROM posts ORDER BY created_date DESC");
+        $query->execute();
+
+        while ($roll_display = $query->fetch(PDO::FETCH_ASSOC)) {
+            $excerpt = 200;
+
+            $conLength = explode(" ", $roll_display['post_content']);
+            
+
+            if ($conLength > $excerpt) {
+                $roll_display['post_content'] = substr($roll_display['post_content'], 0, $excerpt);
+            }
+
+            $pid = $roll_display['pid'];
+            $pTitle = $roll_display['post_title'];
+
+            $q = "?pid=" . $pid . "&title=" . $pTitle;
+
+            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div></div>';
+        }
+    }
     // TODO add query builder functions for users, files, and other content. One function to handle all if possible.
 }
 ?>

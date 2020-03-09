@@ -18,11 +18,11 @@
 
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href=<?php echo __PATH__ ?>>Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href=<?php echo __PATH__ ?>>Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
+      <a class="nav-link" href=<?php echo __PATH__ . "blog/" ?>>Blog</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
@@ -48,6 +48,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href=<?php echo __PATH__ . 'dashboard/'; ?>>My Profile</a>
           <a class="dropdown-item" href=<?php echo __PATH__ . 'edit-profile/'; ?>>Edit Profile</a>
+          <a class="dropdown-item" href=<?php echo __PATH__ . 'post-add/'; ?>>New Blog Post</a>
           <a class="dropdown-item" href=<?php echo __PATH__ . 'song/'; ?>>Upload Song</a>
           <a class="dropdown-item" href=<?php echo __PATH__ . 'image/'; ?>>Upload Image</a>
           <a class="dropdown-item" href=<?php echo __PATH__ . 'logout/'; ?>>Logout</a>

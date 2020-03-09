@@ -14,8 +14,6 @@
   
     $userPic = ($usr['profile_img'] != null) ? __PATH__ . 'uploads/' . $usr['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
 
-    $con = DB::getConnection();
-
     $getFile = $con->prepare("SELECT * FROM files WHERE owner = :uid AND mime_type LIKE 'audio/%' ORDER BY upload_date DESC LIMIT 5");
     $getFile->bindParam(':uid', $usr['uid']);
     $getFile->execute();
@@ -55,13 +53,10 @@
       <div class="row">
         <div class="col-sm-2">
           <div class="profile-image">
-            
             <img class="profile-img" src="<?php echo $userPic ?>" />
           </div>
-          <div class="first-name"><strong>First Name: </strong></span><span><?php echo $usr['first_name']; ?></div>
-          <div class="last-name"><strong>Last Name: </strong></span><span><?php echo $usr['last_name']; ?></div>
-          <div class="last-name"><strong>Age: </strong></span><span><?php echo User::getAge($_SESSION['user_id']); ?> years old</div>
-          <a class="btn btn-outline-primary" href="mailto:<?php echo $usr['email'] ?>">Contact</a>
+          <div class="name"><strong>Name: </strong></span><span><?php echo $usr['first_name'] . " " . $usr['last_name']; ?></div>
+      <div class="age"><strong>Age: </strong></span><span><?php if ($usr['birthdate'] != null): echo User::getAge($_SESSION['user_id']); ?> years old<?php endif; ?></div>
         </div>
         <div class="col-sm-7">
           <h2>About <?php echo $usr['first_name']; ?></h2>

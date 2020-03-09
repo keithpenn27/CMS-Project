@@ -67,12 +67,40 @@ $(document)
           "</div")
 			.show();
 		return false;
-	}
+    }
 
 	// Assuming the code gets this far, we can start the ajax process
 	_error.hide();
 
     sendAjax('POST', '../ajax/login.php', dataObj, 'json',true, _error);
+})
+
+.on("submit", "form.js-post-add", function (event) {
+    event.preventDefault();
+
+    var _form = $(this);
+    var _error = $(".js-error", _form);
+
+    var dataObj = {
+        postTitle: $("#post-title", _form).val(),
+        postContent: $("#post-content", _form).val(),
+    };
+    
+    if(dataObj.postTitle == "") {
+        _error
+            .html("<div class='alert alert-dismissible alert-warning'>" +
+            "<button type='button' class='close' data-dismiss='alert';>&times;</button>" +
+            "<h4 class='alert-heading'>Warning!</h4>" +
+            "<p class='mb-0'>Please enter a title for your post.</p>" +
+          "</div>")
+            .show();
+        return false;
+    }
+
+    // Assuming the code gets this far, we can start the ajax process
+	_error.hide();
+
+    sendAjax('POST', '../ajax/post-add.php', dataObj, 'json',true, _error);
 })
 
 .on("submit", "form.js-song", function (event) {
@@ -287,6 +315,12 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
             if (data.uploaded !== undefined) {
                 _playback
                     .html(data.uploaded);
+            }  
+            
+            if (data.success !== undefined) {
+                _error
+                    .html(data.success)
+                    .show();
             }
         })
         .fail(function ajaxFailed(e){

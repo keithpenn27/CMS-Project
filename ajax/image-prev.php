@@ -27,8 +27,6 @@
             );
 
             if ($user_found && (in_array($mime, $valid_image_mimes))) {
-
-                $con = DB::getConnection();
                 
                 // The user exists. Update the user's profile image
                 if (isset($_FILES['profileImage']) && is_array($_FILES['profileImage'])) {
