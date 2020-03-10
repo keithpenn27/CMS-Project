@@ -211,7 +211,7 @@ class DB {
 
 
     /**
-     * A helper method to get query the database and get a list of blogs
+     * A helper method to query the database and get a list of blogs. Will display an edit link if user can edit.
      * @param Int $uid If a user id is passed this method will echo all blogs created by the given user. Defaults to all posts on the site. Optional.
      * @param Int $exLength Number of characters to shorten the post content to. Defaults to full content. Optional.
      */

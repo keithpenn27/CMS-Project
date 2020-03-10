@@ -33,6 +33,7 @@ class User {
         }
 
         if ($user->rowCount() == 1) {
+            // We found the user in the db so create the user object.
             $user = $user->fetch(PDO::FETCH_OBJ);
 
             $this->email        = (string) $user->email;
@@ -85,6 +86,9 @@ class User {
         return $user_found;
     }
 
+    /**
+     * Static method to get the currently logged in user's info.
+     */
     public static function getCurrentUser() {
         $user = new User($_SESSION['user_id']);
 
@@ -99,6 +103,11 @@ class User {
         );
     }
 
+    /**
+     * Static method used to calculate a user's age based on their birthdate. Accounts for leap years.
+     * @param $uid The id of the user you wish to calculate the age of. Required.
+     * @return Returns the user's current age based of of their stored birthdate.
+     */
     public static function getAge($uid) {
 
         date_default_timezone_set('America/Chicago');
@@ -122,6 +131,11 @@ class User {
         ? $age-1 : $age;
     }
 
+    /**
+     * Static method used to determine a user id is equal to the currently logged in user.
+     * @param Int $uidCheck The user Id to check.
+     * @return Returns true if the uid passed in is equal to the currently logged in user, false otherwise.
+     */
     public static function userCanEdit($uidCheck) {
         if ((int) $uidCheck === $_SESSION['user_id']) {
             return true;
