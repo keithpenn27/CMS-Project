@@ -81,7 +81,7 @@ class DB {
             exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The users table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
+                <h3>The users table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
             return;
         }
 
@@ -114,7 +114,7 @@ class DB {
             exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The files table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
+                <h3>The files table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
         }
 
         $postTable = 'CREATE TABLE posts (
@@ -142,7 +142,7 @@ class DB {
             exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The posts table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
+                <h3>The posts table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
         }
         
         // If we made it this far, we know the database is connected and the tables have been setup

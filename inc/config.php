@@ -13,7 +13,7 @@
     // Our config is below
 
      // Constant for the base url. This way if the name of the project folder is different it shouldn't effect slugs.
-     define('__PATH__', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . basename(dirname(dirname(__FILE__))) . '/');
+     define('__PATH__', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . basename(dirname(__FILE__, 2)) . '/');
 
 	// Include the class files
 	include_once "classes/DB.php";
@@ -26,7 +26,7 @@
 
     // Set up our db connection
     $host = "db-Host";
-    $port = "db-Post";
+    $port = "db-Port";
     $dbName = "db-Name";
     $dbUserName = "db-UserName";
     $dbPass = "db-Pass";
