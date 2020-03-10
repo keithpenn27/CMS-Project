@@ -121,5 +121,13 @@ class User {
         return (date('md', date('U', $dob)) > date('md', date('U', $date))) 
         ? $age-1 : $age;
     }
+
+    public static function userCanEdit($uidCheck) {
+        if ((int) $uidCheck === $_SESSION['user_id']) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 ?>

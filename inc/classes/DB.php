@@ -76,12 +76,12 @@ class DB {
             $ex = $pdo->prepare($userTable);
             $ex->execute();
         } catch (PDOException $e) {
-            echo "<div class=\"container\">
+            // Catch the error and display a message to the user.
+
+            exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>Your database has already been set up!</h3>
-            </div>
-        </div>" . $e->getMessage();
+                <h3>The users table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
             return;
         }
 
@@ -110,12 +110,11 @@ class DB {
             $ex = $pdo->prepare($fileTable);
             $ex->execute();
         } catch (PDOException $e) {
-            echo "<div class=\"container\">
+            // Catch the error and display a message to the user
+            exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>Your database has already been set up!</h3>
-            </div>
-        </div>" . $e-getMessage();
+                <h3>The files table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
         }
 
         $postTable = 'CREATE TABLE posts (
@@ -139,14 +138,14 @@ class DB {
             $ex = $pdo->prepare($postTable);
             $ex->execute();
         } catch (PDOException $e) {
-            echo "<div class=\"container\">
+            // Catch the error and display a message to the user
+            exit("<div class=\"container\">
             <div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>Your database has already been set up!</h3>
-            </div>
-        </div>" . $e-getMessage();
+                <h3>The posts table already exists in the database!</h3>" . $e->getMessage()) . "</div></div>";
         }
-
+        
+        // If we made it this far, we know the database is connected and the tables have been setup
         echo "<div class=\"container\">
         <div class=\"alert alert-dismissible alert-success\">
             <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
@@ -157,6 +156,17 @@ class DB {
     
     }
 
+    /**
+     * Updates the user's account information.
+     * @param String $profile_image the user's profile image file name.
+     * @param String $first_name The user's first name.
+     * @param String $last_name The user's last name.
+     * @param String $newEmail The user's new email address to replace the $oldEmail (if updating email address).
+     * @param String $oldEmail The user's current email address before updating. Used to find the user in database query.
+     * @param String $password The user's password.
+     * @param Date $birthDate The user's birthdate. In date format 00-00-0000.
+     * @param String $bio The user's bio section
+     */
     public static function updateUser($profile_image, $first_name, $last_name, $newEmail, $oldEmail, $password, $birthDate, $bio) {
 
         if ($profile_image !== null && is_array($profile_image)) {
@@ -178,6 +188,11 @@ class DB {
             }
     }
 
+    /**
+     * A helper method to update the user's profile picture. Called from the updateUser method if the profile image field is populated.
+     * @param String $profile_image A string representation of the user's profile image file name.
+     * @param String @oldEmail The user's current email address. Not the email address we are updating to if editing the user's profile.
+     */
     public function updateProfilePic($profile_image, $oldEmail) {
         $file = new FileHandler($profile_image);
 
@@ -194,18 +209,28 @@ class DB {
         }
     }
 
-    public static function getBlogRoll() {
-        $query = self::$con->prepare("SELECT * FROM posts ORDER BY created_date DESC");
-        $query->execute();
+
+    /**
+     * A helper method to get query the database and get a list of blogs
+     * @param Int $uid If a user id is passed this method will echo all blogs created by the given user. Defaults to all posts on the site. Optional.
+     * @param Int $exLength Number of characters to shorten the post content to. Defaults to full content. Optional.
+     */
+    public static function getBlogRoll($uid = null, $exLength = 0) {
+        if ($uid == null) {
+            $query = self::$con->prepare("SELECT * FROM posts ORDER BY created_date DESC");
+            $query->execute();
+        } else {
+            $query = self::$con->prepare("SELECT * FROM posts WHERE author = $uid ORDER BY created_date DESC");
+            $query->execute();
+        }
 
         while ($roll_display = $query->fetch(PDO::FETCH_ASSOC)) {
-            $excerpt = 200;
-
-            $conLength = explode(" ", $roll_display['post_content']);
+            $excerpt = $exLength;
+            $conLength = strlen($roll_display['post_content']);
             
-
-            if ($conLength > $excerpt) {
+            if ($excerpt != 0 && $conLength > $excerpt) {
                 $roll_display['post_content'] = substr($roll_display['post_content'], 0, $excerpt);
+                $roll_display['post_content'] .= "...";
             }
 
             $pid = $roll_display['pid'];
@@ -213,9 +238,10 @@ class DB {
 
             $q = "?pid=" . $pid . "&title=" . $pTitle;
 
-            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div></div>';
+            $link = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit Post</a>' : '';
+
+            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div>' . $link . '</div>';
         }
     }
-    // TODO add query builder functions for users, files, and other content. One function to handle all if possible.
 }
 ?>

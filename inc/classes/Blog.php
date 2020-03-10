@@ -36,6 +36,20 @@ class Blog {
         }
     }
 
+    public function updatePost($con) {
+        try {
+            $postUpdate = $con->prepare("UPDATE posts SET post_title = :post_title, post_content = :post_content WHERE post_title = :post_title AND author = :author_id");
+            $postUpdate->bindParam(":post_title", $this->title, PDO::PARAM_STR);
+            $postUpdate->bindParam(":post_content", $this->content, PDO::PARAM_STR);
+            $postUpdate->bindParam(":author_id", $this->author_id, PDO::PARAM_INT);
+            $postUpdate->execute();
+
+        } catch (PDOExeception $e) {
+            echo $e->getMessage();
+        }
+
+    }
+
     public static function getSinglePost($pid, $con) {
         $pid = $pid;
 

@@ -40,6 +40,9 @@
       $iListDisplay .= "<img src=\"" . __PATH__ . 'uploads/' . $file['filename'] . "\" width=\"100%\"/>";
     }
 
+    $getPosts = $con->prepare("SELECT * FROM posts WHERE author = :author_id");
+    $getPosts->bindParam(":author_id", $usr['uid'], PDO::PARAM_INT);
+    $getPosts->execute();
 
 ?>
     <div class="container">
@@ -79,6 +82,12 @@
             <h5>Pictures</h3>
             <div class="file-list">
               <?php echo $iListDisplay ?>
+            </div>
+          </div>
+          <div class="sidebar-block">
+            <h5>Blog Posts</h3>
+            <div class="file-list">
+              <?php DB::getBlogRoll($usr['uid'], 70) ?>
             </div>
           </div>
         </div>

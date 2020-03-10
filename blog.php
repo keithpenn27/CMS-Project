@@ -36,6 +36,10 @@
         <div class="content">
           <?php echo nl2br($postInfo['post_content']) ?>
         </div>
+        <?php $link = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Edit Post</a>' : '';
+          echo $link;
+           ?>
+
      </div>
      <div class="col-sm-3">
 
@@ -50,7 +54,7 @@
         <div class="col-sm-9">
            <h1>Blog</h1>
           <div class="content">
-            <?php DB::getBlogRoll() ?>
+            <?php DB::getBlogRoll("", 200) ?>
           </div>
         </div>
         <div class="col-sm-3">

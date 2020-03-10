@@ -21,6 +21,7 @@
     <div class="row">
         <p>You have not configured your database! Please enter your database information below so the proper database
             tables can be installed.</p>
+            <p><i>Please make sure that this program has permissions to write to config file. You may have to set write permissions on the parent directory.</i></p>
     </div>
     <div class="row">
         <form method="post" action="dbsubmission.php" autocomplete="on">

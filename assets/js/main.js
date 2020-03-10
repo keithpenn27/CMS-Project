@@ -103,6 +103,38 @@ $(document)
     sendAjax('POST', '../ajax/post-add.php', dataObj, 'json',true, _error);
 })
 
+.on("submit", "form.js-post-edit", function (event) {
+    event.preventDefault();
+
+    var split = location.search.replace('?', '').split('=');
+    var getVal = split[1];
+
+    var _form = $(this);
+    var _error = $(".js-error", _form);
+
+    var dataObj = {
+        postTitle: $("#post-title", _form).val(),
+        postContent: $("#post-content", _form).val(),
+        getVal: getVal
+    };
+    
+    if(dataObj.postTitle == "") {
+        _error
+            .html("<div class='alert alert-dismissible alert-warning'>" +
+            "<button type='button' class='close' data-dismiss='alert';>&times;</button>" +
+            "<h4 class='alert-heading'>Warning!</h4>" +
+            "<p class='mb-0'>Please enter a title for your post.</p>" +
+          "</div>")
+            .show();
+        return false;
+    }
+
+    // Assuming the code gets this far, we can start the ajax process
+	_error.hide();
+
+    sendAjax('POST', '../ajax/post-edit.php', dataObj, 'json',true, _error);
+})
+
 .on("submit", "form.js-song", function (event) {
 	event.preventDefault();
 
