@@ -47,7 +47,9 @@ class FileHandler {
 
         // Check if the users upload dir exists
         if (!is_dir($this->dir)) {
-            mkdir($this->dir, 007, true);
+            mkdir($this->dir, 0777, true);
+            chmod('../uploads', 0777);
+            chmod('../uploads/' . substr(self::getUserDir(), 0, strlen(self::getUserDir()) - 1), 0777);
         }
     }
 
@@ -240,6 +242,28 @@ class FileHandler {
 
         return $iListDisplay;
     }
+
+    public static function deleteFile($fName) {
+
+        var_dump('../uploads/' . self::getUserDir() . $fName);
+        unlink('../uploads/' . self::getUserDir() . $fName);
+
+        if (self::is_dir_empty()) {
+            rmdir('../uploads/' . self::getUserDir());
+        }
+    }
+
+    public function is_dir_empty() {
+        $theDir = '../uploads/' . self::getUserDir();
+        if (!is_readable($theDir)) return NULL;
+        $handle = opendir($theDir);
+        while (false !== ($entry = readdir($handle))) {
+          if ($entry != "." && $entry != "..") {
+            return FALSE;
+          }
+        }
+        return TRUE;
+      }
 
 
     // Delete all files from the uploads directory by specific user if user is deleted.

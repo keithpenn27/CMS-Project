@@ -25,11 +25,11 @@
     include_once "functions.php";
 
     // Set up our db connection
-    $host = "db-Host";
-    $port = "db-Port";
-    $dbName = "db-Name";
-    $dbUserName = "db-UserName";
-    $dbPass = "db-Pass";
+    $host = "localhost";
+    $port = "3306";
+    $dbName = "cms_project";
+    $dbUserName = "kp-anamoly-27";
+    $dbPass = "JorLog1720";
 
     $tableCon = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
     $con = DB::getConnection();

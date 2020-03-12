@@ -20,6 +20,8 @@
             $fileRow->bindParam(":fid", $fid, PDO::PARAM_INT);
             $fileRow->execute();
 
+            FileHandler::deleteFile($fileName);
+
             $response['fileDeleted'] = true;
             $response['fid'] = $fid;
         } catch (PDOException $e) {
