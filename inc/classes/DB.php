@@ -58,6 +58,7 @@ class DB {
      * @param DB $pdo The connection PDO object that contains the database connection.
      */
     public static function createTables($pdo) {
+
         $userTable = 'CREATE TABLE users(
             uid   INT  (5) UNSIGNED AUTO_INCREMENT COMMENT "User Id" NOT NULL,
             first_name VARCHAR (50)  COMMENT "The users first name"   NOT NULL,
@@ -78,11 +79,9 @@ class DB {
         } catch (PDOException $e) {
             // Catch the error and display a message to the user.
 
-            exit("<div class=\"container\">
-            <div class=\"alert alert-dismissible alert-warning\">
+            echo "<div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The users table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
-            return;
+                <h3>The users table already exists in the database!</h3>" . $e->getMessage() . "</div>";
         }
 
         $fileTable = 'CREATE TABLE files (
@@ -111,10 +110,9 @@ class DB {
             $ex->execute();
         } catch (PDOException $e) {
             // Catch the error and display a message to the user
-            exit("<div class=\"container\">
-            <div class=\"alert alert-dismissible alert-warning\">
-                <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The files table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
+            echo "<div class=\"alert alert-dismissible alert-warning\">
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+                <h3>The files table already exists in the database!</h3>" . $e->getMessage() . "</div>";
         }
 
         $postTable = 'CREATE TABLE posts (
@@ -139,20 +137,17 @@ class DB {
             $ex->execute();
         } catch (PDOException $e) {
             // Catch the error and display a message to the user
-            exit("<div class=\"container\">
-            <div class=\"alert alert-dismissible alert-warning\">
+            die("<div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
-                <h3>The posts table already exists in the database!</h3>" . $e->getMessage() . "</div></div>");
+                <h3>The posts table already exists in the database!</h3>" . $e->getMessage() . "</div>");
         }
         
         // If we made it this far, we know the database is connected and the tables have been setup
-        echo "<div class=\"container\">
-        <div class=\"alert alert-dismissible alert-success\">
+        echo "<div class=\"alert alert-dismissible alert-success\">
             <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
             <h3>Your database has been set up!</h3>
             <a href=\"../register/\">Create Your Account</a>
-        </div>
-    </div>";
+        </div>";
     
     }
 

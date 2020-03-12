@@ -11,7 +11,7 @@
 
     $user = User::getCurrentUser();
 
-    $userPic = ($user['profile_img'] != null) ? __PATH__ . 'uploads/' . $user['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
+    $userPic = ($user['profile_img'] != null) ? __PATH__ . 'uploads/' . FileHandler::getUserDir() . $user['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
     
 ?>
 

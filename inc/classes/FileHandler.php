@@ -17,6 +17,9 @@ class FileHandler {
     private $fileSize;
     public $filePath;
 
+    // Relative path to user's uploads dir
+    private $dir;
+
 
     /**
      * Contructs the file to be uploaded
@@ -25,26 +28,27 @@ class FileHandler {
     public function __construct($file) {
         $this->fileName = $file['name'];
 
+        $this->dir = '../uploads/' . self::getUserDir();
+
         // Check if the file name exists. If so, add an incremented number and reassign. 
-        $this->fileName = $this->exists($this->fileName);
+        $this->fileName = $this->exists($this->dir, $this->fileName);
+
+        $this->filePath = $this->dir . $this->fileName;
 
         // Get the rest of our file info
         $this->err = $file['error'];
         $this->fileSize = $file['size'];
         $this->mimeType = $file['type'];
-
+        
         // Set up the dirs and paths
         $this->tempDir = $file['tmp_name'];
-        $this->newDir = __PATH__ . 'uploads/';
+        $this->newDir = $this->dir;
 
-        $dir = '../uploads/';
 
-        // Check if the upload dir exists
-        if (!is_dir($dir)) {
-            mkdir($dir);
+        // Check if the users upload dir exists
+        if (!is_dir($this->dir)) {
+            mkdir($this->dir, 007, true);
         }
-
-        $this->filePath = $dir . $this->fileName;
     }
 
     /**
@@ -144,9 +148,9 @@ class FileHandler {
      * @param String $tmpFile The file name to check.
      * @return Returns a string of the new file name if it already exists or the original file name if it does not.
      */
-    public function exists($tmpFile){
+    public function exists($tmpPath, $tmpFile){
         $file = $tmpFile;
-        $path = '../uploads/';
+        $path = $tmpPath;
 
         if ($pos = strrpos($file, '.')) {
             $name = substr($file, 0, $pos);
@@ -167,6 +171,76 @@ class FileHandler {
      return $newname;
 
     }
+
+    public static function getUserDir() {
+
+        $user = new User($_SESSION['user_id']);
+        $user = $user->getCurrentUser();
+        $uEmail = $user['email'];
+
+        $pos = strrpos($uEmail, '@');
+        $userDir = substr($uEmail, 0, $pos) . '/';
+
+        return $userDir;
+    }
+
+    public static function getSongs($uid, $con) {
+
+        try {
+            $getFile = $con->prepare("SELECT * FROM files WHERE owner = :uid AND mime_type LIKE 'audio/%' ORDER BY upload_date DESC LIMIT 5");
+            $getFile->bindParam(':uid', $uid);
+            $getFile->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        $sListDisplay = "";
+
+        while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
+            $sListDisplay .= "<div class=\"song-wrapper\"><div class=\"song-info\"><strong>Song Title:</strong> " . $file['song_title'] . "<br />";
+            $sListDisplay .= "<strong>Artist:</strong> " . $file['artist'] . "<br />";
+            $sListDisplay .= "<strong>Album:</strong> " . $file['album'] . "<br />";
+            $sListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
+            $sListDisplay .= "<audio controls><source src=\"" . "../uploads/" . self::getUserDir() . $file['filename'] . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio>";
+            
+
+            $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
+            
+            $sListDisplay .= $link;
+            $sListDisplay .= "</div>";
+        }
+
+        return $sListDisplay;
+
+    }
+
+    public static function getImages($uid, $con) {
+        
+        try {
+            $getFile = $con->prepare("SELECT * FROM files WHERE owner = :uid AND mime_type LIKE 'image/%' ORDER BY upload_date DESC LIMIT 5");
+            $getFile->bindParam(':uid', $uid);
+            $getFile->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        $iListDisplay = "";
+
+        while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
+            $iListDisplay .= "<div class=\"image-wrapper\"><div class=\"image-info\"><strong>Image Title:</strong> " . $file['image_title'] . "<br />";
+            $iListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
+            $iListDisplay .= "<img src=\"" . "../uploads/" . self::getUserDir() . $file['filename'] . "\" width=\"100%\"/>";
+            
+            $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
+        
+            $iListDisplay .= $link;
+            $iListDisplay .= "</div>";
+
+        }
+
+        return $iListDisplay;
+    }
+
 
     // Delete all files from the uploads directory by specific user if user is deleted.
 

@@ -22,11 +22,11 @@
             if (isset($_FILES['profileImage']) && is_array($_FILES['profileImage'])) {
                 $profile_image = $_FILES['profileImage'];
                 $response['image'] = $profile_image['name'];
-                $response['path'] = __PATH__ . 'uploads/';
+                $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
             } elseif ($user_found['profile_image']!= null) {
                 $profile_image = $user_found['profile_image'];
                 $response['image'] = $profile_image;
-                $response['path'] = __PATH__ . 'uploads/';
+                $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
             } else {
                 $profile_image = null;
                 $response['image'] = 'inc/img/default-avatar.png';

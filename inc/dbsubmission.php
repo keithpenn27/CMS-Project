@@ -58,7 +58,9 @@
             $con = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
             $tableCon = DB::getConnection();
 
+            echo "<div class=\"container\">";
             DB::createTables($tableCon);
+            echo "</div>";
 
     }
 

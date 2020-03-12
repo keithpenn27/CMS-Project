@@ -135,6 +135,26 @@ $(document)
     sendAjax('POST', '../ajax/post-edit.php', dataObj, 'json',true, _error);
 })
 
+.on("click", "a.delete-file", function (event) {
+    event.preventDefault();
+
+    var _error = $(".js-error");
+
+    var dataObj = {
+        fileName: $("a.delete-file").data("file-name"),
+        fileId: $("a.delete-file").data("file-id")
+    };
+
+    sendAjax('POST', '../ajax/delete-file.php', dataObj, 'json',true, _error);
+
+    $(this).parent().fadeOut(400, function(){
+        $(this).html("The file was deleted.").fadeIn(200, function() {
+            $(this).delay(600).fadeOut(400, "")
+        });
+    })
+
+})
+
 .on("submit", "form.js-song", function (event) {
 	event.preventDefault();
 
@@ -312,6 +332,7 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
                     .html(data.success)
                     .show();
             }
+
         })
         .fail(function ajaxFailed(e){
             // Ajax call failed
@@ -354,6 +375,7 @@ function sendAjax(requestType, requestUrl, dataobject, dType, asyncBool, _error,
                     .html(data.success)
                     .show();
             }
+
         })
         .fail(function ajaxFailed(e){
             // Ajax call failed
