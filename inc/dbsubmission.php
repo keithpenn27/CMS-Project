@@ -56,12 +56,14 @@
             $config = str_replace($configArr["dbPass"], $dbPass, $file);
             file_put_contents($fileName, $config);
 
-            $con = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
-            $tableCon = DB::getConnection();
+            $tableCon = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
+            $con = DB::getConnection();
 
-            echo "<div class=\"container\">";
-            DB::createTables($tableCon);
-            echo "</div>";
+            if ($con != null) {
+                echo "<div class=\"container\">";
+                DB::createTables($con);
+                echo "</div>";
+            }
 
     }
 
