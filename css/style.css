@@ -36,3 +36,11 @@ img.profile-img {
     padding: 2% 1%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+.row {
+    padding: 0.5% 0%;
+}
+
+form.profile {
+    width: 100%;
+}

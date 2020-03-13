@@ -1,7 +1,11 @@
 <?php
+
+ // Constant for the base url. This way if the name of the project folder is different it shouldn't effect slugs.
+ define('__PATH__', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . basename(dirname(__FILE__, 2)) . '/');
+
  // If there is no constant defined called __CONFIG__ do not load this file
     if(!defined('__CONFIG__')) {
-        header('Location: ' . Url::getBasePath());
+        header('Location: ' . __PATH__);
         exit;
 
     }
@@ -11,9 +15,6 @@
         session_start();
 }
     // Our config is below
-
-     // Constant for the base url. This way if the name of the project folder is different it shouldn't effect slugs.
-     define('__PATH__', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . basename(dirname(__FILE__, 2)) . '/');
 
 	// Include the class files
 	include_once "classes/DB.php";
@@ -25,11 +26,11 @@
     include_once "functions.php";
 
     // Set up our db connection
-    $host = "localhost";
-    $port = "3306";
-    $dbName = "cms_project";
-    $dbUserName = "kp-anamoly-27";
-    $dbPass = "JorLog1720";
+    $host = "db-Host";
+    $port = "db-Port";
+    $dbName = "db-Name";
+    $dbUserName = "db-UserName";
+    $dbPass = "db-Pass";
 
     $tableCon = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
     $con = DB::getConnection();

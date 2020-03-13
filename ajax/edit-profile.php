@@ -15,6 +15,9 @@
         $user_found = User::Find($_SESSION['user_id'], "", true);
 
         $email = $user_found['email'];
+        $userPic = $user_found['profile_image'];
+        $path = dirname(__FILE__, 2) . "/uploads/";
+
 
         if ($user_found) {
             
@@ -23,10 +26,18 @@
                 $profile_image = $_FILES['profileImage'];
                 $response['image'] = $profile_image['name'];
                 $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
-            } elseif ($user_found['profile_image']!= null) {
-                $profile_image = $user_found['profile_image'];
-                $response['image'] = $profile_image;
-                $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
+
+                if (!is_dir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir())) {
+                    mkdir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir(), 0777, true);
+                    chmod('../uploads', 0777);
+                    chmod('../uploads/' . substr(FileHandler::getUserDir($_SESSION['user_id']), 0, strlen(FileHandler::getUserDir($_SESSION['user_id'])) - 1), 0777);
+                }
+
+                move_uploaded_file($profile_image['tmp_name'], dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir() . $profile_image['name']);
+                
+                DB::updateProfilePic($profile_image, $email);
+
+                FileHandler::deleteFile($path, $userPic);
             } else {
                 $profile_image = null;
                 $response['image'] = 'inc/img/default-avatar.png';
@@ -39,7 +50,7 @@
             $birthDate = $_POST['birthDate'];
             $bio = $_POST['bio'];
 
-            DB::updateUser($profile_image, $first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
+            DB::updateUser($first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
 
             $response['success'] = "<div class=\"alert alert-dismissible alert-success\">Your profile has been saved.</div>";
 

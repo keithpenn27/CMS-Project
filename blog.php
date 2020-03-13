@@ -17,9 +17,12 @@
 
       $authorInfo = Blog::getPostAuthor($author_id, $con);
 
+      $dir = FileHandler::getUserDir($author_id);
+
       $authorName = $authorInfo['first_name'] . " " . $authorInfo['last_name'];
-      $authorPic = ($authorInfo['profile_image'] != null) ? __PATH__ . 'uploads/' . $authorInfo['profile_image'] : __PATH__ . 'inc/img/default-avatar.png';
+      $authorPic = ($authorInfo['profile_image'] != null) ? __PATH__ . 'uploads/' . $dir . $authorInfo['profile_image'] : __PATH__ . 'inc/img/default-avatar.png';
       $authorEmail = $authorInfo['email'];
+
 ?>
     <div class="container">
     <div class="row">
@@ -36,9 +39,13 @@
         <div class="content">
           <?php echo nl2br($postInfo['post_content']) ?>
         </div>
-        <?php $link = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Edit Post</a>' : '';
-          echo $link;
-           ?>
+        <?php  
+        
+            $editLink = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Edit</a>' : '';
+            $deleteLink = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Delete</a>' : '';
+          
+            echo $editLink . " " . $deleteLink;
+          ?>
 
      </div>
      <div class="col-sm-3">

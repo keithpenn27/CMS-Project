@@ -14,13 +14,14 @@
 
         $fid = $_POST['fileId'];
         $fileName = $_POST['fileName'];
+        $path = dirname(__FILE__, 2) . "/uploads/";
 
         try {
             $fileRow = $con->prepare("DELETE FROM files WHERE fid = :fid");
             $fileRow->bindParam(":fid", $fid, PDO::PARAM_INT);
             $fileRow->execute();
 
-            FileHandler::deleteFile($fileName);
+            FileHandler::deleteFile($path, $fileName);
 
             $response['fileDeleted'] = true;
             $response['fid'] = $fid;

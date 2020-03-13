@@ -49,7 +49,7 @@ class FileHandler {
         if (!is_dir($this->dir)) {
             mkdir($this->dir, 0777, true);
             chmod('../uploads', 0777);
-            chmod('../uploads/' . substr(self::getUserDir(), 0, strlen(self::getUserDir()) - 1), 0777);
+            chmod('../uploads/' . substr(self::getUserDir($_SESSION['user_id']), 0, strlen(self::getUserDir($_SESSION['user_id'])) - 1), 0777);
         }
     }
 
@@ -82,7 +82,7 @@ class FileHandler {
 
                 $addFile->execute();
             } catch (PDOException $e) {
-                var_dump($e->getMessage());
+                echo $e->getMessage();
             }
         }
     }
@@ -117,7 +117,7 @@ class FileHandler {
 
                 $addFile->execute();
             } catch (PDOException $e) {
-                var_dump($e->getMessage());
+                echo $e->getMessage();
             }
         } else {
             die("The file type is not allowed.");
@@ -176,8 +176,7 @@ class FileHandler {
 
     public static function getUserDir() {
 
-        $user = new User($_SESSION['user_id']);
-        $user = $user->getCurrentUser();
+        $user = User::getCurrentUser();
         $uEmail = $user['email'];
 
         $pos = strrpos($uEmail, '@');
@@ -203,7 +202,7 @@ class FileHandler {
             $sListDisplay .= "<strong>Artist:</strong> " . $file['artist'] . "<br />";
             $sListDisplay .= "<strong>Album:</strong> " . $file['album'] . "<br />";
             $sListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
-            $sListDisplay .= "<audio controls><source src=\"" . "../uploads/" . self::getUserDir() . $file['filename'] . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio>";
+            $sListDisplay .= "<audio controls><source src=\"" . "../uploads/" . self::getUserDir($uid) . $file['filename'] . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio>";
             
 
             $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
@@ -231,7 +230,7 @@ class FileHandler {
         while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
             $iListDisplay .= "<div class=\"image-wrapper\"><div class=\"image-info\"><strong>Image Title:</strong> " . $file['image_title'] . "<br />";
             $iListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
-            $iListDisplay .= "<img src=\"" . "../uploads/" . self::getUserDir() . $file['filename'] . "\" width=\"100%\"/>";
+            $iListDisplay .= "<img src=\"" . "../uploads/" . self::getUserDir($uid) . $file['filename'] . "\" width=\"100%\"/>";
             
             $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
         
@@ -243,18 +242,17 @@ class FileHandler {
         return $iListDisplay;
     }
 
-    public static function deleteFile($fName) {
+    public static function deleteFile($path, $fName) {
+        $tmpDir = self::getUserDir();
+        unlink($path . $tmpDir . $fName);
 
-        var_dump('../uploads/' . self::getUserDir() . $fName);
-        unlink('../uploads/' . self::getUserDir() . $fName);
-
-        if (self::is_dir_empty()) {
-            rmdir('../uploads/' . self::getUserDir());
+        if (self::is_dir_empty($path)) {
+            rmdir($path . self::getUserDir());
         }
     }
 
-    public function is_dir_empty() {
-        $theDir = '../uploads/' . self::getUserDir();
+    public static function is_dir_empty($path) {
+        $theDir = $path . self::getUserDir();
         if (!is_readable($theDir)) return NULL;
         $handle = opendir($theDir);
         while (false !== ($entry = readdir($handle))) {

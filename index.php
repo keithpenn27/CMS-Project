@@ -11,8 +11,6 @@
 
         <div class="container">
             <?php
-                echo "Hello World! Today is: ";
-                echo date('Y m d');
                 if (isset($_GET['message']) && $_GET['message'] != null):
             ?>
             <div class="jumbotron">

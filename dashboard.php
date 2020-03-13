@@ -12,7 +12,7 @@
 
     $usr = User::getCurrentUser();
   
-    $userPic = ($usr['profile_img'] != null) ? __PATH__ . 'uploads/' . FileHandler::getUserDir() . $usr['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
+    $userPic = ($usr['profile_img'] != null) ? __PATH__ . 'uploads/' . FileHandler::getUserDir($usr['uid']) . $usr['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
 
     $getPosts = $con->prepare("SELECT * FROM posts WHERE author = :author_id");
     $getPosts->bindParam(":author_id", $usr['uid'], PDO::PARAM_INT);

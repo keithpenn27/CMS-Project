@@ -10,8 +10,6 @@
     Page::ForceLogin();
 
     $user = User::getCurrentUser();
-
-    $userPic = ($user['profile_img'] != null) ? __PATH__ . 'uploads/' . $user['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
     
     if (isset($_GET['title']) && $_GET['title'] != null && isset($_GET['pid']) && $_GET['pid'] != null):
         $postTitle = $_GET['title'];
@@ -40,6 +38,7 @@
                 <label for="bio">Content</label>
                 <textarea id="post-content" name="content" class="form-control" rows="10" cols="10" placeholder="Enter Your Content" ><?php echo $postContent ?></textarea>
             </div>
+            <input type="hidden" class="pid" id="pid" name="pid" value="<?php echo $pid ?>" />
             <div class="js-error" style="display:none;"></div>
 
             <button type="submit" class="btn btn-primary">Update</button>
@@ -50,7 +49,7 @@
 
     <?php else: 
 
-        //header("Location: " . __PATH__ . "post-add/");
+        header("Location: " . __PATH__ . "post-add/");
 
         endif; 
     ?>

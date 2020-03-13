@@ -162,20 +162,26 @@ class DB {
      * @param Date $birthDate The user's birthdate. In date format 00-00-0000.
      * @param String $bio The user's bio section
      */
-    public static function updateUser($profile_image, $first_name, $last_name, $newEmail, $oldEmail, $password, $birthDate, $bio) {
+    public static function updateUser($first_name, $last_name, $newEmail, $oldEmail, $password = null, $birthDate = null, $bio) {
 
-        if ($profile_image !== null && is_array($profile_image)) {
-            self::updateProfilePic($profile_image, $oldEmail);
-        }
+        $passCheck = ($password != null) ? "password = :password," : "";
+        $birthCheck = ($birthDate != null) ? "birthdate = :birthdate," : "";
 
         $con = DB::getConnection();
             try {
-            $addUser = $con->prepare("UPDATE users SET first_name = :firstname, last_name = :lastname, email = LOWER(:email), password = :password, birthdate = :birthdate, bio = :bio WHERE email = \"$oldEmail\"");
+            $addUser = $con->prepare("UPDATE users SET first_name = :firstname, last_name = :lastname, email = LOWER(:email), $passCheck $birthCheck bio = :bio WHERE email = \"$oldEmail\"");
             $addUser->bindParam(':firstname', $first_name, PDO::PARAM_STR);
             $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
             $addUser->bindParam(':email', $newEmail, PDO::PARAM_STR);
-            $addUser->bindParam(':password', $password, PDO::PARAM_STR);
-            $addUser->bindParam(':birthdate', $birthDate, PDO::PARAM_STR);
+
+            if ($passCheck != "") {
+                $addUser->bindParam(':password', $password, PDO::PARAM_STR);
+            }
+
+            if ($birthCheck != "") {
+                $addUser->bindParam(':birthdate', $birthDate, PDO::PARAM_STR);
+            }
+
             $addUser->bindParam(':bio', $bio, PDO::PARAM_STR);
             $addUser->execute();
             } catch (PDOException $e) {
@@ -190,8 +196,6 @@ class DB {
      */
     public function updateProfilePic($profile_image, $oldEmail) {
         $file = new FileHandler($profile_image);
-
-        move_uploaded_file($profile_image['tmp_name'], $file->filePath);
 
         $con = DB::getConnection();
        
@@ -233,9 +237,10 @@ class DB {
 
             $q = "?pid=" . $pid . "&title=" . $pTitle;
 
-            $link = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit Post</a>' : '';
+            $editLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit</a>' : '';
+            $deleteLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $pTitle . '" />Delete</a>' : '';
 
-            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div>' . $link . '</div>';
+            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div>' . $editLink . ' ' . $deleteLink . '</div>';
         }
     }
 }

@@ -147,9 +147,9 @@ $(document)
 
     sendAjax('POST', '../ajax/delete-file.php', dataObj, 'json',true, _error);
 
-    $(this).parent().fadeOut(400, function(){
-        $(this).html("The file was deleted.").fadeIn(200, function() {
-            $(this).delay(600).fadeOut(400, "")
+    $(this).parent().fadeOut(600, function(){
+        $(this).html("The file was deleted.").fadeIn(400, function() {
+            $(this).delay(1000).fadeOut(600, "")
         });
     })
 
@@ -234,6 +234,7 @@ $(document)
         password: $("input[type='password']", _form).val(),
     };
     
+    console.log(dataObj.location);
 	if(dataObj.email.length < 6) {
 		_error
 			.html("<div class='alert alert-dismissible alert-warning'>" +
@@ -243,14 +244,14 @@ $(document)
           "</div>")
 			.show();
 		return false;
-	} else if (dataObj.password.length < 11) {
+	} else if ((dataObj.password != '') && dataObj.password.length < 11 ) {
 		_error
 			.html("<div class='alert alert-dismissible alert-warning'>" +
             "<button type='button' class='close' data-dismiss='alert';>&times;</button>" +
             "<h4 class='alert-heading'>Warning!</h4>" +
             "<p class='mb-0'>Please enter a password that is at least 11 characters long.</p>" +
           "</div")
-			.show();
+            .show();
 		return false;
     }
 
