@@ -28,6 +28,7 @@ class FileHandler {
     public function __construct($file) {
         $this->fileName = $file['name'];
 
+        // We can't use our __PATH__ constant here because move_uploaded_file() will not work over http
         $this->dir = '../uploads/' . self::getUserDir();
 
         // Check if the file name exists. If so, add an incremented number and reassign. 
@@ -94,6 +95,7 @@ class FileHandler {
      */
     public function imageUpload($arr) {
 
+        // Get the mime type so we can handle audio and images separately
         $ext = $this->mimeType;
 
         if ($ext == 'image/jpeg' || $ext == 'image/gif' || $ext == 'image/png') {
@@ -155,6 +157,7 @@ class FileHandler {
         $path = $tmpPath;
 
         if ($pos = strrpos($file, '.')) {
+            // split the file ext from the file name.
             $name = substr($file, 0, $pos);
             $ext = substr($file, $pos);
         } else {
@@ -164,16 +167,23 @@ class FileHandler {
         $newpath = $path . $file;
         $newname = $file;
         $counter = 1;
+
+        // Loop through files of the same name to create the next incremented number
         while (file_exists($newpath)) {
             $newname = $name .'_'. $counter . $ext;
             $newpath = $path.'/'.$newname;
             $counter++;
         }
- 
+        
+        // return the new name of the file to the FileHandler constructor
      return $newname;
 
     }
 
+    /**
+     * Gets the directory of the currently logged in user
+     * @return Returns the directory name of the user's file folder inside of the uploads directory
+     */
     public static function getUserDir() {
 
         $user = User::getCurrentUser();
@@ -185,6 +195,11 @@ class FileHandler {
         return $userDir;
     }
 
+    /**
+     * Returns a list of songs uploaded by the given user formatted to display in an html5 audio player
+     * @param $uid The user id that uploaded the files. 
+     * @param $con The database connection PDO object.
+     */
     public static function getSongs($uid, $con) {
 
         try {
@@ -197,6 +212,7 @@ class FileHandler {
 
         $sListDisplay = "";
 
+        // Build our song list with the html5 audio player
         while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
             $sListDisplay .= "<div class=\"song-wrapper\"><div class=\"song-info\"><strong>Song Title:</strong> " . $file['song_title'] . "<br />";
             $sListDisplay .= "<strong>Artist:</strong> " . $file['artist'] . "<br />";
@@ -211,10 +227,16 @@ class FileHandler {
             $sListDisplay .= "</div>";
         }
 
+        // Return the list
         return $sListDisplay;
 
     }
 
+    /**
+     * Returns a list of images uploaded by the given user
+     * @param $uid The user that uploaded the files
+     * @param $con The database connection PDO Object
+     */
     public static function getImages($uid, $con) {
         
         try {
@@ -227,6 +249,7 @@ class FileHandler {
 
         $iListDisplay = "";
 
+        // Build our list of images
         while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
             $iListDisplay .= "<div class=\"image-wrapper\"><div class=\"image-info\"><strong>Image Title:</strong> " . $file['image_title'] . "<br />";
             $iListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
@@ -239,18 +262,30 @@ class FileHandler {
 
         }
 
+        // Return the list
         return $iListDisplay;
     }
 
+    /**
+     * Deletes a single file. Can be an image or audio file.
+     * @param $path The directory that the file is located in
+     * @param $fName The file name that should be deleted
+     */
     public static function deleteFile($path, $fName) {
         $tmpDir = self::getUserDir();
         unlink($path . $tmpDir . $fName);
 
+        // Check if the directory is now empty, if so, delete the directory
         if (self::is_dir_empty($path)) {
             rmdir($path . self::getUserDir());
         }
     }
 
+    /**
+     * A helper method to check if a directory is empty
+     * @param $path The path to the directory to check
+     * @return Returns true if the directory is empty. Otherwise, false.
+     */
     public static function is_dir_empty($path) {
         $theDir = $path . self::getUserDir();
         if (!is_readable($theDir)) return NULL;

@@ -33,16 +33,27 @@
                     chmod('../uploads/' . substr(FileHandler::getUserDir($_SESSION['user_id']), 0, strlen(FileHandler::getUserDir($_SESSION['user_id'])) - 1), 0777);
                 }
 
+                /** Moving the uploaded file here to avoid duplicates. If we create a FileHandler object to handle this, the constructor checks if the file exists and appends a number
+                 * Which causes issues with deleting the saved profile image. Since the profile image is saved in the user table and not the files table, we would have an off count
+                 * between files table and user's upload dir
+                 */
+
                 move_uploaded_file($profile_image['tmp_name'], dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir() . $profile_image['name']);
                 
+                // We use ajax to display the image quickly, but the profile pic isn't actually updated in the db until we call updateProfilePic
                 DB::updateProfilePic($profile_image, $email);
 
+                // Delete the stored profile image to avoid mismatched counts between the the files table and user's uploads dir
                 FileHandler::deleteFile($path, $userPic);
+
             } else {
+                // if no file has been selected as a profile image, we show the default avatar
                 $profile_image = null;
                 $response['image'] = 'inc/img/default-avatar.png';
                 $response['path'] = __PATH__;
             }
+
+            // Set up our fields, so we can update the user table
             $first_name = $_POST['firstName'];
             $last_name = $_POST['lastName'];
             $newEmail = $_POST['email'];
@@ -50,6 +61,7 @@
             $birthDate = $_POST['birthDate'];
             $bio = $_POST['bio'];
 
+            // Update the user table
             DB::updateUser($first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
 
             $response['success'] = "<div class=\"alert alert-dismissible alert-success\">Your profile has been saved.</div>";
@@ -72,7 +84,7 @@
         exit;
 
     } else {
-        // Die. Kill the scripe. Redirect the user.
+        // Die. Kill the script. Redirect the user.
         header("Location: " . __PATH__ . "index.php");
         exit('Invalid URL');
     }

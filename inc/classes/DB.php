@@ -77,6 +77,7 @@ class DB {
             $ex = $pdo->prepare($userTable);
             $ex->execute();
         } catch (PDOException $e) {
+            
             // Catch the error and display a message to the user.
 
             echo "<div class=\"alert alert-dismissible alert-warning\">
@@ -109,6 +110,7 @@ class DB {
             $ex = $pdo->prepare($fileTable);
             $ex->execute();
         } catch (PDOException $e) {
+
             // Catch the error and display a message to the user
             echo "<div class=\"alert alert-dismissible alert-warning\">
             <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
@@ -153,7 +155,6 @@ class DB {
 
     /**
      * Updates the user's account information.
-     * @param String $profile_image the user's profile image file name.
      * @param String $first_name The user's first name.
      * @param String $last_name The user's last name.
      * @param String $newEmail The user's new email address to replace the $oldEmail (if updating email address).
@@ -164,9 +165,11 @@ class DB {
      */
     public static function updateUser($first_name, $last_name, $newEmail, $oldEmail, $password = null, $birthDate = null, $bio) {
 
+        // Since these fields are optional when editing, we need to check before we bind the params
         $passCheck = ($password != null) ? "password = :password," : "";
         $birthCheck = ($birthDate != null) ? "birthdate = :birthdate," : "";
 
+        // We need to get the db connection here since we are in a static scope and have not loaded the config file
         $con = DB::getConnection();
             try {
             $addUser = $con->prepare("UPDATE users SET first_name = :firstname, last_name = :lastname, email = LOWER(:email), $passCheck $birthCheck bio = :bio WHERE email = \"$oldEmail\"");
@@ -174,10 +177,11 @@ class DB {
             $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
             $addUser->bindParam(':email', $newEmail, PDO::PARAM_STR);
 
+            // If a new password was entered, update the column in the users table
             if ($passCheck != "") {
                 $addUser->bindParam(':password', $password, PDO::PARAM_STR);
             }
-
+            // If a new DOB was entered, update the columne in the users table
             if ($birthCheck != "") {
                 $addUser->bindParam(':birthdate', $birthDate, PDO::PARAM_STR);
             }
@@ -195,8 +199,11 @@ class DB {
      * @param String @oldEmail The user's current email address. Not the email address we are updating to if editing the user's profile.
      */
     public function updateProfilePic($profile_image, $oldEmail) {
+
+        // create a FileHandler Object so we can easily access it's properties and create the user's uploads folder if it does not exist
         $file = new FileHandler($profile_image);
 
+        // We need to get the db connection here since we are in a static scope and have not loaded the config file
         $con = DB::getConnection();
        
         try {
@@ -215,28 +222,37 @@ class DB {
      * @param Int $exLength Number of characters to shorten the post content to. Defaults to full content. Optional.
      */
     public static function getBlogRoll($uid = null, $exLength = 0) {
+        // Check for a user id.
         if ($uid == null) {
+            
+            // If uid was not supplied, get all blog posts
             $query = self::$con->prepare("SELECT * FROM posts ORDER BY created_date DESC");
             $query->execute();
         } else {
+
+            // Else get blog posts created by the user
             $query = self::$con->prepare("SELECT * FROM posts WHERE author = $uid ORDER BY created_date DESC");
             $query->execute();
         }
 
+        // We need to return the columns from multiple rows as an assoc array
         while ($roll_display = $query->fetch(PDO::FETCH_ASSOC)) {
             $excerpt = $exLength;
             $conLength = strlen($roll_display['post_content']);
             
+            // If an int was supplied for excerpt and it is less than the chars in the full post content, we create the excerpt
             if ($excerpt != 0 && $conLength > $excerpt) {
                 $roll_display['post_content'] = substr($roll_display['post_content'], 0, $excerpt);
                 $roll_display['post_content'] .= "...";
             }
 
+            // We need the pid and post_title to build our link query
             $pid = $roll_display['pid'];
             $pTitle = $roll_display['post_title'];
 
             $q = "?pid=" . $pid . "&title=" . $pTitle;
 
+            // Check if the user can edit. If so, create the edit and delete links
             $editLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit</a>' : '';
             $deleteLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $pTitle . '" />Delete</a>' : '';
 
