@@ -263,8 +263,5 @@ class FileHandler {
         return TRUE;
       }
 
-
-    // Delete all files from the uploads directory by specific user if user is deleted.
-
 }
 ?>

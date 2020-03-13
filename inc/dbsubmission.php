@@ -22,6 +22,7 @@
     }
     
     if ($_SERVER["REQUEST_METHOD"] == 'POST' && $referrer == "dbsetup.php") {
+
             $host = $_POST['host'];
             $port = $_POST['port'];
             $dbName = $_POST['db-name'];
