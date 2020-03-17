@@ -30,8 +30,9 @@
             </div>
             <div class="form-group">
                 <label for="file">File</label>
-                <input type="file" class="form-control file-upload" id="file" name="file" required='required'>
+                <input type="file" class="form-control file-upload" id="song-upload" name="file" required='required'>
             </div>
+            <div class="col-12"><audio id="audio-preview" style="display: none;" controls><source src="" type="audio/mp3">Your browser does not support the audio element.</audio></div>
 
             <div class="js-error" style="display:none;"></div>
             

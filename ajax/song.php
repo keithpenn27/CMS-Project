@@ -71,7 +71,7 @@
             $src = $fileHandler->getSrc();
 
             // Putting the audio player into the ajax response to dynamically show it.
-            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your song has been uploaded!</div><div class=\"col-12\"><audio controls><source src=\"" . $src . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio></div></div>";
+            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your song has been uploaded!</div></div>";
 
             $response['uploaded'] = $msg_string;
         }

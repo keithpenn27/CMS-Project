@@ -22,7 +22,10 @@
             </div>
             <div class="form-group">
                 <label for="file">File</label>
-                <input type="file" class="form-control file-upload" id="file" name="file" required='required'>
+                <input type="file" class="form-control file-upload" id="image-upload" name="file" required='required'>
+            </div>
+            <div class="image">
+                <img id="image-preview" width="125px" src="" />
             </div>
 
             <div class="js-error" style="display:none;"></div>

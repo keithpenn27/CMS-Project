@@ -203,12 +203,14 @@ class DB {
         // create a FileHandler Object so we can easily access it's properties and create the user's uploads folder if it does not exist
         $file = new FileHandler($profile_image);
 
+        move_uploaded_file($file->getTempDir(), $file->filePath);
+
         // We need to get the db connection here since we are in a static scope and have not loaded the config file
         $con = DB::getConnection();
        
         try {
             $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image WHERE email = \"$oldEmail\"");
-            $addUser->bindParam(':profile_image', $profile_image['name'], PDO::PARAM_STR);
+            $addUser->bindParam(':profile_image', $file->fileName, PDO::PARAM_STR);
             $addUser->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();

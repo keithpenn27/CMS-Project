@@ -17,7 +17,7 @@
 
     <div class="container">
         <div class="row">
-        <form class="js-edit-profile profile" autocomplete="on">
+        <form class="js-edit-profile profile" autocomplete="on" id="edit-profile">
         <h2>Edit Profile</h2>
             <fieldset>
 
@@ -29,7 +29,7 @@
             </div>
     
             <div class="profile-image">
-                <img class="image-preview" src="<?php echo $userPic ?>" />
+                <img id="image-preview" width="125px" src="<?php echo $userPic ?>" />
             </div>
         
 

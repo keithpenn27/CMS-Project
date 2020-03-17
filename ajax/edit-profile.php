@@ -27,24 +27,20 @@
                 $response['image'] = $profile_image['name'];
                 $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
 
+                // We need to create the uploads directory and user's directory if they haven't been created yet.
                 if (!is_dir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir())) {
                     mkdir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir(), 0777, true);
                     chmod('../uploads', 0777);
                     chmod('../uploads/' . substr(FileHandler::getUserDir($_SESSION['user_id']), 0, strlen(FileHandler::getUserDir($_SESSION['user_id'])) - 1), 0777);
                 }
 
-                /** Moving the uploaded file here to avoid duplicates. If we create a FileHandler object to handle this, the constructor checks if the file exists and appends a number
-                 * Which causes issues with deleting the saved profile image. Since the profile image is saved in the user table and not the files table, we would have an off count
-                 * between files table and user's upload dir
-                 */
-
-                move_uploaded_file($profile_image['tmp_name'], dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir() . $profile_image['name']);
-                
-                // We use ajax to display the image quickly, but the profile pic isn't actually updated in the db until we call updateProfilePic
+                    
+                // Update the user's profile pic
                 DB::updateProfilePic($profile_image, $email);
 
                 // Delete the stored profile image to avoid mismatched counts between the the files table and user's uploads dir
                 FileHandler::deleteFile($path, $userPic);
+
 
             } else {
                 // if no file has been selected as a profile image, we show the default avatar
@@ -57,7 +53,10 @@
             $first_name = $_POST['firstName'];
             $last_name = $_POST['lastName'];
             $newEmail = $_POST['email'];
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+            // We need to check here is a value was passed in for the password to avoid hashing empty space.
+            $password = (isset($_POST['password']) && $_POST['password'] != null) ? $password = password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
+
             $birthDate = $_POST['birthDate'];
             $bio = $_POST['bio'];
 

@@ -7,11 +7,11 @@
 
     require_once "header.php";
 
-        // If we have a connection to the database, redirect to home page.
-        if(DB::getConnection()) {
-            header("Location: " . __PATH__);
-            exit;
-        }
+    // If we have a connection to the database, redirect to home page.
+    if(DB::getConnection()) {
+        header("Location: " . __PATH__);
+        exit;
+    }
 
     if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null) {
         $referrer = $_SERVER['HTTP_REFERER'];
@@ -23,47 +23,59 @@
     
     if ($_SERVER["REQUEST_METHOD"] == 'POST' && $referrer == "dbsetup.php") {
 
-            $host = $_POST['host'];
-            $port = $_POST['port'];
-            $dbName = $_POST['db-name'];
-            $dbUserName= $_POST['db-username'];
-            $dbPass = $_POST['db-password'];
+        // Set up our two arrays so we can compare and update.
+        $newConfigArr = array(
+            "host" => $_POST['host'],
+            "port" => $_POST['port'],
+            "dbName" => $_POST['db-name'],
+            "dbUserName" => $_POST['db-username'],
+            "dbPass" => $_POST['db-password']
+        );
 
-            $fileName = "config.php";
+        $configArr = array(
+            "host" => "db-Host",
+            "port" => "db-Port",
+            "dbName" => "db-Name",
+            "dbUserName" => "db-UserName",
+            "dbPass" => "db-Pass"
+        );
 
+        // Get the current config so we can rewrite without losing info
+        $fileName = "config.php";
+
+        if (is_writable($fileName)) {
         
-            $configArr = array(
-               "host" => "db-Host",
-               "port" => "db-Port",
-               "dbName" => "db-Name",
-               "dbUserName" => "db-UserName",
-               "dbPass" => "db-Pass"
-            );
+        // Iterate through both arrays and compare the keys
+        foreach($configArr as $fKey => $fVal) {
+            foreach ($newConfigArr as $nKey => $nVal) {
 
-            $file = file($fileName);
-            $config = str_replace($configArr["host"], $host, $file);
-            file_put_contents($fileName, $config);
-            $file = file($fileName);
-            $config = str_replace($configArr["port"], $port, $file);
-            file_put_contents($fileName, $config);
-            $file = file($fileName);
-            $config = str_replace($configArr["dbName"], $dbName, $file);
-            file_put_contents($fileName, $config);
-            $file = file($fileName);
-            $config = str_replace($configArr["dbUserName"], $dbUserName, $file);
-            file_put_contents($fileName, $config);
-            $file = file($fileName);
-            $config = str_replace($configArr["dbPass"], $dbPass, $file);
-            file_put_contents($fileName, $config);
+                // If the keys match, use str_replace the default values with the user's database config
+                if ($nKey == $fKey) {
 
-            $tableCon = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
-            $con = DB::getConnection();
-
-            if ($con != null) {
-                echo "<div class=\"container\">";
-                DB::createTables($con);
-                echo "</div>";
+                    // we need to get the file's contents each iteration so we don't lose the last iterations info.
+                    $file = file($fileName);
+                    $config = str_replace($fVal, $nVal, $file);
+                    file_put_contents($fileName, $config);
+                }
+    
             }
+
+        }
+
+        // Since this is our first connection, we need to set the connnection apart from the config file. The config file will handle it after this.
+        $tableCon = DB::setConnection($newConfigArr['host'], $newConfigArr['port'], $newConfigArr['dbName'], $newConfigArr['dbUserName'], $newConfigArr['dbPass']);
+        $con = DB::getConnection();
+
+        // If we have our connection, we set up the db tables.
+        if ($con != null) {
+            echo "<div class=\"container\">";
+            DB::createTables($con);
+            echo "</div>";
+        }
+
+        } else {
+            echo "<div class=\"container\"><div class=\"alert alert-dismissible alert-danger\">The config.php could not be updated! Please make sure the file is writable and the proper permissions have been set.</div></div>";
+        }
 
     }
 

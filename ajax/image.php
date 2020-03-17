@@ -56,7 +56,7 @@
             $src = $fileHandler->getSrc();
 
             // Putting the audio player into the ajax response to dynamically show it.
-            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your image has been uploaded!</div><div class=\"col-12\"><img class=\"image-upload-preview\" src=\"" . $src . "\" /></div></div>";
+            $msg_string = "<div class=\"row\"><div class=\"col-12\">Your image has been uploaded!</div><div class=\"col-12\"></div></div>";
 
             $response['uploaded'] = $msg_string;
         }

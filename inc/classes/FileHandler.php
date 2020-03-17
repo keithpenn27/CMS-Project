@@ -32,6 +32,7 @@ class FileHandler {
         $this->dir = '../uploads/' . self::getUserDir();
 
         // Check if the file name exists. If so, add an incremented number and reassign. 
+
         $this->fileName = $this->exists($this->dir, $this->fileName);
 
         $this->filePath = $this->dir . $this->fileName;
@@ -152,33 +153,25 @@ class FileHandler {
      * @param String $tmpFile The file name to check.
      * @return Returns a string of the new file name if it already exists or the original file name if it does not.
      */
-    public function exists($tmpPath, $tmpFile){
-        $file = $tmpFile;
-        $path = $tmpPath;
-
-        if ($pos = strrpos($file, '.')) {
-            // split the file ext from the file name.
-            $name = substr($file, 0, $pos);
-            $ext = substr($file, $pos);
-        } else {
-            $name = $file;
-        }
-
-        $newpath = $path . $file;
-        $newname = $file;
-        $counter = 1;
-
-        // Loop through files of the same name to create the next incremented number
-        while (file_exists($newpath)) {
+    public function exists($path, $filename){
+        if ($pos = strrpos($filename, '.')) {
+            $name = substr($filename, 0, $pos);
+            $ext = substr($filename, $pos);
+     } else {
+            $name = $filename;
+     }
+ 
+     $newpath = $path.'/'.$filename;
+     $newname = $filename;
+     $counter = 1;
+     while (file_exists($newpath)) {
             $newname = $name .'_'. $counter . $ext;
             $newpath = $path.'/'.$newname;
             $counter++;
-        }
-        
-        // return the new name of the file to the FileHandler constructor
+      }
+ 
      return $newname;
-
-    }
+ }
 
     /**
      * Gets the directory of the currently logged in user
@@ -273,7 +266,11 @@ class FileHandler {
      */
     public static function deleteFile($path, $fName) {
         $tmpDir = self::getUserDir();
-        unlink($path . $tmpDir . $fName);
+        
+        // Make sure the the file exists before we try to unlink
+        if (file_exists($path . $tmpDir . $fName) && !is_dir($path . $tmpDir . $fName)) {
+            unlink($path . $tmpDir . $fName);
+        }
 
         // Check if the directory is now empty, if so, delete the directory
         if (self::is_dir_empty($path)) {
