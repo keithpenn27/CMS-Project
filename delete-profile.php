@@ -17,7 +17,7 @@
                 $q->execute();
 
                 while ($file = $q->fetch(PDO::FETCH_ASSOC)) {
-                    FileHandler::deleteFile($path, $file['filename']);
+                    Files\FileHandler::deleteFile($path, $file['filename']);
                 }
                 
                 $qUser = $con->prepare("SELECT * FROM users WHERE uid = :uid LIMIT 1");
@@ -25,7 +25,7 @@
                 $qUser->execute();
 
                 while ($user = $qUser->fetch(PDO::FETCH_ASSOC)) {
-                    FileHandler::deleteFile($path, $user["profile_image"]);
+                    Files\FileHandler::deleteFile($path, $user["profile_image"]);
                 }
 
             } catch (PDOException $e) {

@@ -7,7 +7,7 @@
     require_once "config.php";
 
     // If we have a connection to the database, redirect to home page.
-    if(DB::getConnection()) {
+    if(System\DB::getConnection()) {
         header("Location: " . __PATH__ . "index.php");
         exit;
     }

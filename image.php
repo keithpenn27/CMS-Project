@@ -7,7 +7,7 @@
 
     require_once "inc/header.php";
 
-    Page::ForceLogin();
+    Utils\Page::ForceLogin();
 ?>
 
 

@@ -1,4 +1,5 @@
 <?php
+namespace Users;
 
 // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
@@ -21,20 +22,20 @@ class User {
     public $reg_time;
     
     public function __construct(int $user_id) {
-        $this->con = DB::getConnection();
+        $this->con = \System\DB::getConnection();
 
-        $user_id = Filter::Int($user_id);
+        $user_id = \Utils\Filter::Int($user_id);
         try {
         $user = $this->con->prepare("SELECT uid, profile_image, first_name, last_name, email, password, birthdate, bio, reg_time FROM users WHERE uid = :user_id LIMIT 1");
-        $user->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $user->bindParam(":user_id", $user_id, \PDO::PARAM_INT);
         $user->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo $e->getMessage();
         }
 
         if ($user->rowCount() == 1) {
             // We found the user in the db so create the user object.
-            $user = $user->fetch(PDO::FETCH_OBJ);
+            $user = $user->fetch(\PDO::FETCH_OBJ);
 
             $this->email        = (string) $user->email;
             $this->user_id      = (int) $user->uid;
@@ -59,7 +60,7 @@ class User {
      */
     public static function Find($uid = null, $email = null, $return_assoc  = false){
        
-        $con = DB::getConnection();
+        $con = \System\DB::getConnection();
 
         $user_id = $uid;
         $email = $email;
@@ -68,17 +69,17 @@ class User {
         if ($user_id != null) {
             // search by uid when editing the user
             $findUser = $con->prepare("SELECT * FROM users WHERE uid = :uid");
-            $findUser->bindParam(':uid', $user_id, PDO::PARAM_INT);
+            $findUser->bindParam(':uid', $user_id, \PDO::PARAM_INT);
             $findUser->execute();
         } else {
             // search by email when loggin in or registering user.
             $findUser = $con->prepare("SELECT * FROM users WHERE email = LOWER(:email)");
-            $findUser->bindParam(':email', $email, PDO::PARAM_STR);
+            $findUser->bindParam(':email', $email, \PDO::PARAM_STR);
             $findUser->execute();
         }
     
         if ($return_assoc) {
-            return $findUser->fetch(PDO::FETCH_ASSOC);
+            return $findUser->fetch(\PDO::FETCH_ASSOC);
         }
 
         $user_found = (boolean) $findUser->rowCount();
@@ -91,7 +92,6 @@ class User {
      */
     public static function getCurrentUser() {
         $user = new User($_SESSION['user_id']);
-
         return array(
             'uid' => $user->user_id,
             'email' => $user->email,
@@ -112,9 +112,9 @@ class User {
 
         date_default_timezone_set('America/Chicago');
 
-        $con = DB::getConnection();
+        $con = \System\DB::getConnection();
         $q = $con->prepare("SELECT birthdate FROM users WHERE uid = :uid LIMIT 1");
-        $q->bindParam(':uid', $uid, PDO::PARAM_INT);
+        $q->bindParam(':uid', $uid, \PDO::PARAM_INT);
         $q->execute();
 
         $val = $q->fetch();

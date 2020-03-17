@@ -7,7 +7,7 @@
 
     require_once "inc/header.php";
     
-    Page::ForceDashboard();
+    Utils\Page::ForceDashboard();
     
 ?>
 

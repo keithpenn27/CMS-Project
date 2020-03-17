@@ -8,11 +8,11 @@
 
     require_once "inc/header.php";
 
-    Page::ForceLogin();
+    Utils\Page::ForceLogin();
 
-    $usr = User::getCurrentUser();
+    $usr = Users\User::getCurrentUser();
   
-    $userPic = ($usr['profile_img'] != null) ? __PATH__ . 'uploads/' . FileHandler::getUserDir($usr['uid']) . $usr['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
+    $userPic = ($usr['profile_img'] != null) ? __PATH__ . 'uploads/' . Files\FileHandler::getUserDir($usr['uid']) . $usr['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
 
     $getPosts = $con->prepare("SELECT * FROM posts WHERE author = :author_id");
     $getPosts->bindParam(":author_id", $usr['uid'], PDO::PARAM_INT);
@@ -33,9 +33,9 @@
             <img class="profile-img" src="<?php echo $userPic ?>" />
           </div>
           <div class="name"><strong>Name: </strong></span><span><?php echo $usr['first_name'] . " " . $usr['last_name']; ?></div>
-      <div class="age"><strong>Age: </strong></span><span><?php if ($usr['birthdate'] != null): echo User::getAge($_SESSION['user_id']); ?> years old<?php endif; ?></div>
+      <div class="age"><strong>Age: </strong></span><span><?php if ($usr['birthdate'] != null): echo Users\User::getAge($_SESSION['user_id']); ?> years old<?php endif; ?></div>
         </div>
-        <div class="col-sm-7">
+        <div class="col-sm-6">
           <h2>About <?php echo $usr['first_name']; ?></h2>
           <div class="content">
             <?php echo nl2br($usr['bio']) ?>
@@ -44,24 +44,24 @@
 
         <!-- Query db to get list of songs and images -->
 
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <h4>My Recent Uploads</h4>
           <div class="sidebar-block">
             <h5>Songs</h5>
             <div class="file-list">
-              <?php echo FileHandler::getSongs($usr['uid'], $con) ?>
+              <?php echo Files\FileHandler::getSongs($usr['uid'], $con) ?>
             </div>
           </div>
           <div class="sidebar-block">
             <h5>Pictures</h3>
             <div class="file-list">
-              <?php echo FileHandler::getImages($usr['uid'], $con) ?>
+              <?php echo Files\FileHandler::getImages($usr['uid'], $con) ?>
             </div>
           </div>
           <div class="sidebar-block">
             <h5>Blog Posts</h3>
             <div class="file-list">
-              <?php DB::getBlogRoll($usr['uid'], 70) ?>
+              <?php System\DB::getBlogRoll($usr['uid'], 70) ?>
             </div>
           </div>
         </div>

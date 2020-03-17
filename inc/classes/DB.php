@@ -1,4 +1,5 @@
 <?php
+namespace System;
 
 
  // If there is no constant defined called __CONFIG__ do not load this file
@@ -13,11 +14,11 @@ class DB {
 
     private function __construct($host, $port, $dbName, $dbUsername, $dbPass) {
         try {
-            self::$con = new PDO('mysql:charset=utf8mb4;host=' . $host . ';port=' . $port . ';dbname=' . $dbName, $dbUsername, $dbPass);
-            self::$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            self::$con->setAttribute(PDO::ATTR_PERSISTENT, false);
+            self::$con = new \PDO('mysql:charset=utf8mb4;host=' . $host . ';port=' . $port . ';dbname=' . $dbName, $dbUsername, $dbPass);
+            self::$con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            self::$con->setAttribute(\PDO::ATTR_PERSISTENT, false);
 
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // We are not connected and we need to set up the database.
             // We need to make sure that we are not currently on the dbsetup.php page so we don't create an infinite redirect
             $uri = explode("/", $_SERVER['REQUEST_URI']);
@@ -76,7 +77,7 @@ class DB {
         try {
             $ex = $pdo->prepare($userTable);
             $ex->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             
             // Catch the error and display a message to the user.
 
@@ -109,7 +110,7 @@ class DB {
         try {
             $ex = $pdo->prepare($fileTable);
             $ex->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
 
             // Catch the error and display a message to the user
             echo "<div class=\"alert alert-dismissible alert-warning\">
@@ -137,7 +138,7 @@ class DB {
         try {
             $ex = $pdo->prepare($postTable);
             $ex->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // Catch the error and display a message to the user
             die("<div class=\"alert alert-dismissible alert-warning\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
@@ -173,20 +174,20 @@ class DB {
         $con = DB::getConnection();
             try {
             $addUser = $con->prepare("UPDATE users SET first_name = :firstname, last_name = :lastname, email = LOWER(:email), $passCheck $birthCheck bio = :bio WHERE email = \"$oldEmail\"");
-            $addUser->bindParam(':firstname', $first_name, PDO::PARAM_STR);
-            $addUser->bindParam(':lastname', $last_name, PDO::PARAM_STR);
-            $addUser->bindParam(':email', $newEmail, PDO::PARAM_STR);
+            $addUser->bindParam(':firstname', $first_name, \PDO::PARAM_STR);
+            $addUser->bindParam(':lastname', $last_name, \PDO::PARAM_STR);
+            $addUser->bindParam(':email', $newEmail, \PDO::PARAM_STR);
 
             // If a new password was entered, update the column in the users table
             if ($passCheck != "") {
-                $addUser->bindParam(':password', $password, PDO::PARAM_STR);
+                $addUser->bindParam(':password', $password, \PDO::PARAM_STR);
             }
             // If a new DOB was entered, update the columne in the users table
             if ($birthCheck != "") {
-                $addUser->bindParam(':birthdate', $birthDate, PDO::PARAM_STR);
+                $addUser->bindParam(':birthdate', $birthDate, \PDO::PARAM_STR);
             }
 
-            $addUser->bindParam(':bio', $bio, PDO::PARAM_STR);
+            $addUser->bindParam(':bio', $bio, \PDO::PARAM_STR);
             $addUser->execute();
             } catch (PDOException $e) {
                 echo $e->getMessage();
@@ -201,7 +202,7 @@ class DB {
     public function updateProfilePic($profile_image, $oldEmail) {
 
         // create a FileHandler Object so we can easily access it's properties and create the user's uploads folder if it does not exist
-        $file = new FileHandler($profile_image);
+        $file = new \Files\FileHandler($profile_image);
 
         move_uploaded_file($file->getTempDir(), $file->filePath);
 
@@ -210,9 +211,9 @@ class DB {
        
         try {
             $addUser = $con->prepare("UPDATE users SET profile_image = :profile_image WHERE email = \"$oldEmail\"");
-            $addUser->bindParam(':profile_image', $file->fileName, PDO::PARAM_STR);
+            $addUser->bindParam(':profile_image', $file->fileName, \PDO::PARAM_STR);
             $addUser->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo $e->getMessage();
         }
     }
@@ -238,13 +239,13 @@ class DB {
         }
 
         // We need to return the columns from multiple rows as an assoc array
-        while ($roll_display = $query->fetch(PDO::FETCH_ASSOC)) {
+        while ($roll_display = $query->fetch(\PDO::FETCH_ASSOC)) {
             $excerpt = $exLength;
-            $conLength = strlen($roll_display['post_content']);
+            $conLength = \strlen($roll_display['post_content']);
             
             // If an int was supplied for excerpt and it is less than the chars in the full post content, we create the excerpt
             if ($excerpt != 0 && $conLength > $excerpt) {
-                $roll_display['post_content'] = substr($roll_display['post_content'], 0, $excerpt);
+                $roll_display['post_content'] = \substr($roll_display['post_content'], 0, $excerpt);
                 $roll_display['post_content'] .= "...";
             }
 
@@ -255,10 +256,10 @@ class DB {
             $q = "?pid=" . $pid . "&title=" . $pTitle;
 
             // Check if the user can edit. If so, create the edit and delete links
-            $editLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit</a>' : '';
-            $deleteLink = (User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $pTitle . '" />Delete</a>' : '';
+            $editLink = (\Users\User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $pTitle . '" />Edit</a>' : '';
+            $deleteLink = (\Users\User::userCanEdit($roll_display['author'])) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $pTitle . '" />Delete</a>' : '';
 
-            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . date('D, M, d, Y', strtotime($roll_display['created_date'])) . '</small></div>' . $editLink . ' ' . $deleteLink . '</div>';
+            echo '<div class="excerpt"><div class="blog-title"><a href="' . __PATH__ . 'blog/' . $q . '"><h2>' . $roll_display['post_title'] . '</h2></a></div><p>' . \nl2br($roll_display['post_content']) . '</p><div class="post-date"><small> Posted on: ' . \date('D, M, d, Y', \strtotime($roll_display['created_date'])) . '</small></div>' . $editLink . ' ' . $deleteLink . '</div>';
         }
     }
 }

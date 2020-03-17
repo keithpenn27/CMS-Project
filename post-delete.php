@@ -7,9 +7,9 @@
 
     require_once "inc/header.php";
 
-    Page::ForceLogin();
+    Utils\Page::ForceLogin();
 
-    $user = User::getCurrentUser();
+    $user = Users\User::getCurrentUser();
     
     if (isset($_GET['title']) && $_GET['title'] != null && isset($_GET['pid']) && $_GET['pid'] != null) {
         $postTitle = $_GET['title'];

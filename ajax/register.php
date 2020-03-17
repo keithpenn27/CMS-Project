@@ -12,16 +12,16 @@
         
         $response = [];
 
-        $email = Filter::String($_POST['email']);
+        $email = Utils\Filter::String($_POST['email']);
 
-        $user_found = User::Find("", $email);
+        $user_found = Users\User::Find("", $email);
 
         if ($user_found) {
             // User exists
             $response['error'] = "<div class='alert alert-dismissible alert-warning'>
             <button type='button' class='close' data-dismiss='alert'>&times;</button>
             <h4 class='alert-heading'>Warning!</h4>
-            <p class='mb-0'>An account has already been registered with that email address.<br/>Please <a href='login.php'>log in</a>.</p>
+            <p class='mb-0'>An account has already been registered with that email address.<br/>Please <a href='" . __PATH__ . "login/'>log in</a>.</p>
           </div>";
 
         } else {

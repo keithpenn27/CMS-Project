@@ -7,9 +7,9 @@
 
     require_once "inc/header.php";
 
-    Page::ForceLogin();
+    Utils\Page::ForceLogin();
 
-    $user = User::getCurrentUser();
+    $user = Users\User::getCurrentUser();
 
     $userPic = ($user['profile_img'] != null) ? __PATH__ . 'uploads/' . $user['profile_img'] : __PATH__ . 'inc/img/default-avatar.png';
     

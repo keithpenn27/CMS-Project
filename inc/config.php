@@ -32,7 +32,7 @@
     $dbUserName = "db-UserName";
     $dbPass = "db-Pass";
 
-    $tableCon = DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
-    $con = DB::getConnection();
+    $tableCon = System\DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
+    $con = System\DB::getConnection();
     
     ?>

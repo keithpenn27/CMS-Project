@@ -35,10 +35,10 @@
             $post_content = $_POST['postContent'];
         }
 
-        $post = new Blog($post_title, $post_content, $post_author_id);
+        $post = new Content\Blog($post_title, $post_content, $post_author_id);
         $post->insertPost($con);
 
-        $pView = Blog::getSinglePost($pid = $con->lastInsertId(), $con);
+        $pView = Content\Blog::getSinglePost($pid = $con->lastInsertId(), $con);
 
 
         $query = "?pid=" . $pid . "&title=" . $pView['post_title'];

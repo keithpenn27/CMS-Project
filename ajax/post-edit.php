@@ -22,7 +22,7 @@
             $post_content = $_POST['postContent'];
         }
 
-        $post = new Blog($post_title, $post_content, $post_author_id);
+        $post = new Content\Blog($post_title, $post_content, $post_author_id);
         $post->updatePost($con);
 
         $pid = $_POST['getVal'];

@@ -7,7 +7,7 @@
 
   require_once "config.php";
 
-    $user = (isset($_SESSION['user_id']) && $_SESSION['user_id'] != null) ? new User($_SESSION['user_id']) : false;
+    $user = (isset($_SESSION['user_id']) && $_SESSION['user_id'] != null) ? new Users\User($_SESSION['user_id']) : false;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -24,17 +24,7 @@
       <li class="nav-item">
       <a class="nav-link" href=<?php echo __PATH__ . "blog/" ?>>Blog</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
 
     <?php 
       if ($user): 

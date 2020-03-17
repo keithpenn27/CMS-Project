@@ -1,4 +1,5 @@
 <?php
+namespace Files;
 
  // If there is no constant defined called __CONFIG__ do not load this file
  if(!defined('__CONFIG__')) {
@@ -64,7 +65,7 @@ class FileHandler {
         $ext = $this->mimeType;
 
         if ($ext == 'audio/mp3' || $ext == 'audio/ogg' || $ext == 'audio/wav' || $ext == 'audio/vnd.wav') {
-            $con = DB::getConnection();
+            $con = \System\DB::getConnection();
 
             move_uploaded_file($this->tempDir, $this->filePath);
 
@@ -72,8 +73,8 @@ class FileHandler {
             try {
                 $addFile = $con->prepare("INSERT INTO files(filename, owner, artist, album, song_title, mime_type) VALUES(:filename, :owner, :artist, :album, :song_title, :mime_type)");
 
-                $addFile->bindParam(':filename', $this->fileName, PDO::PARAM_STR);
-                $addFile->bindParam(':mime_type', $this->mimeType, PDO::PARAM_STR);
+                $addFile->bindParam(':filename', $this->fileName, \PDO::PARAM_STR);
+                $addFile->bindParam(':mime_type', $this->mimeType, \PDO::PARAM_STR);
 
                 // The $val passed into bindParam has to be passed by refernce
                 foreach($arr as $key => &$val) {
@@ -83,7 +84,7 @@ class FileHandler {
 
 
                 $addFile->execute();
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 echo $e->getMessage();
             }
         }
@@ -100,7 +101,7 @@ class FileHandler {
         $ext = $this->mimeType;
 
         if ($ext == 'image/jpeg' || $ext == 'image/gif' || $ext == 'image/png') {
-            $con = DB::getConnection();
+            $con = \System\DB::getConnection();
 
             move_uploaded_file($this->tempDir, $this->filePath);
 
@@ -108,8 +109,8 @@ class FileHandler {
             try {
                 $addFile = $con->prepare("INSERT INTO files(filename, owner, image_title, mime_type) VALUES(:filename, :owner, :image_title, :mime_type)");
 
-                $addFile->bindParam(':filename', $this->fileName, PDO::PARAM_STR);
-                $addFile->bindParam(':mime_type', $this->mimeType, PDO::PARAM_STR);
+                $addFile->bindParam(':filename', $this->fileName, \PDO::PARAM_STR);
+                $addFile->bindParam(':mime_type', $this->mimeType, \PDO::PARAM_STR);
 
 
                 // The $val passed into bindParam has to be passed by refernce
@@ -119,7 +120,7 @@ class FileHandler {
 
 
                 $addFile->execute();
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 echo $e->getMessage();
             }
         } else {
@@ -177,10 +178,20 @@ class FileHandler {
      * Gets the directory of the currently logged in user
      * @return Returns the directory name of the user's file folder inside of the uploads directory
      */
-    public static function getUserDir() {
+    public static function getUserDir($uid = null, $con = null) {
+        if (($uid != null && $con == null) || ($uid == null && $con == null)) {
+            $user = \Users\User::getCurrentUser();
+            $uEmail = $user['email'];
+        } else if ($uid != null && $con != null) {
+            $q = $con->prepare("SELECT * FROM users WHERE uid = :uid");
+            $q->bindParam(":uid", $uid, \PDO::PARAM_INT);
+            $q->execute();
 
-        $user = User::getCurrentUser();
-        $uEmail = $user['email'];
+            while ($user = $q->fetch(\PDO::FETCH_ASSOC)) {
+                $uEmail = $user['email'];
+            }
+
+        }
 
         $pos = strrpos($uEmail, '@');
         $userDir = substr($uEmail, 0, $pos) . '/';
@@ -206,15 +217,15 @@ class FileHandler {
         $sListDisplay = "";
 
         // Build our song list with the html5 audio player
-        while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
-            $sListDisplay .= "<div class=\"song-wrapper\"><div class=\"song-info\"><strong>Song Title:</strong> " . $file['song_title'] . "<br />";
-            $sListDisplay .= "<strong>Artist:</strong> " . $file['artist'] . "<br />";
-            $sListDisplay .= "<strong>Album:</strong> " . $file['album'] . "<br />";
-            $sListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
+        while ($file = $getFile->fetch(\PDO::FETCH_ASSOC)) {
+            $sListDisplay .= "<div class=\"song-wrapper\"><div class=\"song-info\"><span class=\"song-info-item\"><strong>Song Title:</strong> " . $file['song_title'] . "</span>";
+            $sListDisplay .= "<span class=\"song-info-item\"><strong>Artist:</strong> " . $file['artist'] . "</span>";
+            $sListDisplay .= "<span class=\"song-info-item\"><strong>Album:</strong> " . $file['album'] . "</span>";
+            $sListDisplay .= "<span class=\"song-info-item\"><strong>Uploaded On:</strong> " . $file['upload_date'] . "</span></div>";
             $sListDisplay .= "<audio controls><source src=\"" . "../uploads/" . self::getUserDir($uid) . $file['filename'] . "\" type=\"audio/mp3\">Your browser does not support the audio element.</audio>";
             
 
-            $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
+            $link = (\Users\User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
             
             $sListDisplay .= $link;
             $sListDisplay .= "</div>";
@@ -236,19 +247,19 @@ class FileHandler {
             $getFile = $con->prepare("SELECT * FROM files WHERE owner = :uid AND mime_type LIKE 'image/%' ORDER BY upload_date DESC LIMIT 5");
             $getFile->bindParam(':uid', $uid);
             $getFile->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo $e->getMessage();
         }
 
         $iListDisplay = "";
 
         // Build our list of images
-        while ($file = $getFile->fetch(PDO::FETCH_ASSOC)) {
-            $iListDisplay .= "<div class=\"image-wrapper\"><div class=\"image-info\"><strong>Image Title:</strong> " . $file['image_title'] . "<br />";
-            $iListDisplay .= "<strong>Uploaded On:</strong> " . $file['upload_date'] . "<br /></div>";
+        while ($file = $getFile->fetch(\PDO::FETCH_ASSOC)) {
+            $iListDisplay .= "<div class=\"image-wrapper\"><div class=\"image-info\"><span class=\"image-info-item\"><strong>Image Title:</strong> " . $file['image_title'] . "</span>";
+            $iListDisplay .= "<span class=\"image-info-item\"><strong>Uploaded On:</strong> " . $file['upload_date'] . "</span></div>";
             $iListDisplay .= "<img src=\"" . "../uploads/" . self::getUserDir($uid) . $file['filename'] . "\" width=\"100%\"/>";
             
-            $link = (User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
+            $link = (\Users\User::userCanEdit($file['owner'])) ? '<a class="delete-file" data-file-id="' . $file['fid'] . '" data-file-name="' . $file['filename'] . '" href="#" />Delete</a>' : '';
         
             $iListDisplay .= $link;
             $iListDisplay .= "</div>";

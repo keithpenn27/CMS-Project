@@ -21,7 +21,7 @@
             $fileRow->bindParam(":fid", $fid, PDO::PARAM_INT);
             $fileRow->execute();
 
-            FileHandler::deleteFile($path, $fileName);
+            Files\FileHandler::deleteFile($path, $fileName);
 
             $response['fileDeleted'] = true;
             $response['fid'] = $fid;

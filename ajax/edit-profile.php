@@ -12,7 +12,7 @@
         
         $response = [];
 
-        $user_found = User::Find($_SESSION['user_id'], "", true);
+        $user_found = Users\User::Find($_SESSION['user_id'], "", true);
 
         $email = $user_found['email'];
         $userPic = $user_found['profile_image'];
@@ -25,21 +25,21 @@
             if (isset($_FILES['profileImage']) && is_array($_FILES['profileImage'])) {
                 $profile_image = $_FILES['profileImage'];
                 $response['image'] = $profile_image['name'];
-                $response['path'] = __PATH__ . 'uploads/' . FileHandler::getUserDir();
+                $response['path'] = __PATH__ . 'uploads/' . Files\FileHandler::getUserDir();
 
                 // We need to create the uploads directory and user's directory if they haven't been created yet.
-                if (!is_dir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir())) {
-                    mkdir(dirname(__FILE__, 2) . "/uploads/" . FileHandler::getUserDir(), 0777, true);
+                if (!is_dir(dirname(__FILE__, 2) . "/uploads/" . Files\FileHandler::getUserDir())) {
+                    mkdir(dirname(__FILE__, 2) . "/uploads/" . Files\FileHandler::getUserDir(), 0777, true);
                     chmod('../uploads', 0777);
-                    chmod('../uploads/' . substr(FileHandler::getUserDir($_SESSION['user_id']), 0, strlen(FileHandler::getUserDir($_SESSION['user_id'])) - 1), 0777);
+                    chmod('../uploads/' . substr(Files\FileHandler::getUserDir($_SESSION['user_id']), 0, strlen(Files\FileHandler::getUserDir($_SESSION['user_id'])) - 1), 0777);
                 }
 
                     
                 // Update the user's profile pic
-                DB::updateProfilePic($profile_image, $email);
+                System\DB::updateProfilePic($profile_image, $email);
 
                 // Delete the stored profile image to avoid mismatched counts between the the files table and user's uploads dir
-                FileHandler::deleteFile($path, $userPic);
+                Files\FileHandler::deleteFile($path, $userPic);
 
 
             } else {
@@ -61,7 +61,7 @@
             $bio = $_POST['bio'];
 
             // Update the user table
-            DB::updateUser($first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
+            System\DB::updateUser($first_name, $last_name, $newEmail, $email, $password, $birthDate, $bio);
 
             $response['success'] = "<div class=\"alert alert-dismissible alert-success\">Your profile has been saved.</div>";
 

@@ -11,13 +11,16 @@
     if (isset($_GET['pid']) && $_GET['pid'] != null) :
       $pid = $_GET['pid'];
 
-      $postInfo = Blog::getSinglePost($pid , $con);
+      $postInfo = Content\Blog::getSinglePost($pid , $con);
 
       $author_id = $postInfo['author'];
 
-      $authorInfo = Blog::getPostAuthor($author_id, $con);
+      $curUser = Users\User::getCurrentUser();
+      $curUserId = $curUser['uid'];
 
-      $dir = FileHandler::getUserDir($author_id);
+      $authorInfo = Content\Blog::getPostAuthor($author_id, $con);
+
+      $dir = Files\FileHandler::getUserDir($author_id, $con);
 
       $authorName = $authorInfo['first_name'] . " " . $authorInfo['last_name'];
       $authorPic = ($authorInfo['profile_image'] != null) ? __PATH__ . 'uploads/' . $dir . $authorInfo['profile_image'] : __PATH__ . 'inc/img/default-avatar.png';
@@ -31,8 +34,8 @@
         <img class="profile-img" src="<?php echo $authorPic ?>" />
   
       <div class="name"><strong>Name: </strong></span><span><?php echo $authorName ?></div>
-      <div class="age"><strong>Age: </strong></span><span><?php if ($authorInfo['birthdate'] != null): echo User::getAge($authorInfo['uid']); ?> years old<?php endif; ?></div>
-          <a class="btn btn-outline-primary" href="mailto:<?php echo $authorEmail ?>">Contact</a>
+      <div class="age"><strong>Age: </strong></span><span><?php if ($authorInfo['birthdate'] != null): echo Users\User::getAge($authorInfo['uid']); ?> years old<?php endif; ?></div>
+      <?php  echo ($curUserId != $author_id) ? '<a class="btn btn-outline-primary" href="mailto:' . $authorEmail . '">Contact</a>' : '' ?>
      </div>
      <div class="col-sm-7">
         <h1><?php echo $postInfo['post_title'] ?></h1>
@@ -41,8 +44,8 @@
         </div>
         <?php  
         
-            $editLink = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Edit</a>' : '';
-            $deleteLink = (User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Delete</a>' : '';
+            $editLink = (Users\User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-edit/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Edit</a>' : '';
+            $deleteLink = (Users\User::userCanEdit($author_id)) ? '<a href="' . __PATH__ . 'post-delete/?pid=' . $pid . '&title=' . $postInfo['post_title'] . '" />Delete</a>' : '';
           
             echo $editLink . " " . $deleteLink;
           ?>
@@ -61,7 +64,7 @@
         <div class="col-sm-9">
            <h1>Blog</h1>
           <div class="content">
-            <?php DB::getBlogRoll("", 200) ?>
+            <?php System\DB::getBlogRoll("", 200) ?>
           </div>
         </div>
         <div class="col-sm-3">

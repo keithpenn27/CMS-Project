@@ -2,13 +2,11 @@
 
     // Allow the config
     define('__CONFIG__', true);
-    // Require the config file
-    require_once  "config.php"; 
 
     require_once "header.php";
 
     // If we have a connection to the database, redirect to home page.
-    if(DB::getConnection()) {
+    if(System\DB::getConnection()) {
         header("Location: " . __PATH__);
         exit;
     }
@@ -63,13 +61,13 @@
         }
 
         // Since this is our first connection, we need to set the connnection apart from the config file. The config file will handle it after this.
-        $tableCon = DB::setConnection($newConfigArr['host'], $newConfigArr['port'], $newConfigArr['dbName'], $newConfigArr['dbUserName'], $newConfigArr['dbPass']);
-        $con = DB::getConnection();
+        $tableCon = System\DB::setConnection($newConfigArr['host'], $newConfigArr['port'], $newConfigArr['dbName'], $newConfigArr['dbUserName'], $newConfigArr['dbPass']);
+        $con = System\DB::getConnection();
 
         // If we have our connection, we set up the db tables.
         if ($con != null) {
             echo "<div class=\"container\">";
-            DB::createTables($con);
+            System\DB::createTables($con);
             echo "</div>";
         }
 

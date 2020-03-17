@@ -37,7 +37,7 @@
             // and pdoVal as first element key of second level, pdoType as second element key of second level
             $formArr = array(
                 ":image_title" => array(
-                    "pdoVal" => Filter::String($_POST['image-title']),
+                    "pdoVal" => Utils\Filter::String($_POST['image-title']),
                     "pdoType" => PDO::PARAM_STR
                 ),
                 ":owner" => array(
@@ -47,7 +47,7 @@
             );
 
             // Create our new file object to handle the upload and get file info.
-            $fileHandler = new FileHandler($_FILES['file']);
+            $fileHandler = new Files\FileHandler($_FILES['file']);
             
             // Upload the song
             $fileHandler->imageUpload($formArr);
