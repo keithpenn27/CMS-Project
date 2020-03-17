@@ -29,7 +29,7 @@
     $host = "db-Host";
     $port = "db-Port";
     $dbName = "db-Name";
-    $dbUserName = "db-UserName";
+    $dbUserName = "db=UserName";
     $dbPass = "db-Pass";
 
     $tableCon = System\DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
