@@ -22,10 +22,11 @@
             $post_content = $_POST['postContent'];
         }
 
-        $post = new Content\Blog($post_title, $post_content, $post_author_id);
-        $post->updatePost($con);
-
         $pid = $_POST['getVal'];
+        
+        $post = new Content\Blog($post_title, $post_content, $post_author_id);
+        $post->updatePost($pid, $con);
+
         $query = "?pid=" . $pid . "&title=" . $post_title;
 
         $response['success'] = '<div class="alert alert-dismissible alert-success">' . $post_title . ' has been updated.<br /><a href="' . __PATH__ . 'blog/' . $query . '">View Post</a>';

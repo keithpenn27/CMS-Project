@@ -95,4 +95,8 @@ a.delete-file:hover {
     margin: 5px 0px 10px
 }
 
+.file-list .excerpt {
+    color: #fff;
+}
+
 

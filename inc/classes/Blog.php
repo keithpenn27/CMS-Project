@@ -37,11 +37,12 @@ class Blog {
         }
     }
 
-    public function updatePost($con) {
+    public function updatePost($pid, $con) {
         try {
-            $postUpdate = $con->prepare("UPDATE posts SET post_title = :post_title, post_content = :post_content WHERE post_title = :post_title AND author = :author_id");
-            $postUpdate->bindParam(":post_title", $this->title, \PDO::PARAM_STR);
+            $postUpdate = $con->prepare("UPDATE posts SET post_title = :post_title, post_content = :post_content, last_update = CURRENT_TIMESTAMP WHERE pid = :pid AND author = :author_id");
+            $postUpdate->bindParam(":pid", $pid, \PDO::PARAM_INT);
             $postUpdate->bindParam(":post_content", $this->content, \PDO::PARAM_STR);
+            $postUpdate->bindParam(":post_title", $this->title, \PDO::PARAM_STR);
             $postUpdate->bindParam(":author_id", $this->author_id, \PDO::PARAM_INT);
             $postUpdate->execute();
 
