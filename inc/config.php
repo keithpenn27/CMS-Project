@@ -26,6 +26,7 @@
     include_once "functions.php";
 
     // Set up our db connection
+    // Do not change default values here. Database set up form will alter the values.
     $host = "db-Host";
     $port = "db-Port";
     $dbName = "db-Name";
