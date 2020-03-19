@@ -9,7 +9,7 @@ A cms project with login system, user registration, members only area, and datab
 
 3. Make sure the permissions on the config.php file are set to read and write. The CMS Project needs permission to write to this file during the database set up process.
 
-4. In your web browser, navigate to the project folder on your local host environment. The first time you run the CMS Project you will be redirected database set up form. 
+4. In your web browser, navigate to the project folder on your local host environment. The first time you run the CMS Project you will be redirected to the database set up form. 
 
 5. Enter your host, database name, the port number your database is listening on, the user name (the database user that has full permissions), and the database user password.
 
