@@ -32,7 +32,10 @@
     $dbUserName = "db-UserName";
     $dbPass = "db-Pass";
 
+    // Set the db connection here as the default through all pages
     $tableCon = System\DB::setConnection($host, $port, $dbName, $dbUserName, $dbPass);
+
+    // Get the connection for use in all files that include the config
     $con = System\DB::getConnection();
     
     ?>
